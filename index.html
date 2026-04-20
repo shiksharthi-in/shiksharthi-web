@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-pt-16">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shiksharthi NEET 2026 | The Ultimate Crash Course</title>
+  
+  <meta property="og:title" content="Shiksharthi NEET 2026">
+  <meta property="og:description" content="Join the ultimate NTA-style Daily Practice Quizzes (DPQ) Crash Course.">
+  <meta property="og:type" content="website">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Custom Brand Colors */
+    .bg-deepOcean { background-color: #0F172A; }
+    .text-deepOcean { color: #0F172A; }
+    .bg-anatomyRed { background-color: #EF4444; }
+    .text-anatomyRed { color: #EF4444; }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+  <nav class="bg-white shadow-md fixed w-full z-50 top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex-shrink-0 flex items-center">
+          <span class="font-bold text-2xl text-deepOcean">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
+        </div>
+        
+        <div class="hidden md:flex items-center space-x-4">
+          <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'});" class="text-gray-600 hover:text-deepOcean px-3 py-2 rounded-md font-medium transition">Features</button>
+          <button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'});" class="text-gray-600 hover:text-deepOcean px-3 py-2 rounded-md font-medium transition">Pricing</button>
+          <a href="/login.html" class="ml-4 bg-anatomyRed text-white px-5 py-2 rounded-md font-bold hover:bg-red-600 transition shadow-sm">Login / Register</a>
+        </div>
+        
+        <div class="md:hidden flex items-center">
+          <button id="mobileMenuBtn" class="text-gray-600 hover:text-deepOcean focus:outline-none text-2xl">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0 top-16">
+      <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+        <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden'); document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars';" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700 hover:text-anatomyRed">Features</button>
+        <button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden'); document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars';" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700 hover:text-anatomyRed">Pricing</button>
+        <a href="/login.html" class="block w-full text-center mt-4 bg-anatomyRed text-white px-5 py-3 rounded-md font-bold hover:bg-red-600 transition shadow-sm">Login / Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="bg-deepOcean text-white pt-28 pb-16 sm:pt-36 sm:pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-block bg-gray-800 rounded-full px-4 py-1 text-sm font-semibold text-gray-300 mb-6 border border-gray-700 shadow-sm">
+        <i class="fas fa-check-circle text-green-400 mr-2"></i> Strictly based on Latest NTA Syllabus
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+        Crack NEET 2026 with <br class="hidden sm:block"><span class="text-anatomyRed">Absolute Precision</span>
+      </h1>
+      <p class="mt-4 max-w-2xl mx-auto text-lg sm:text-xl text-gray-300">
+        Join the ultimate Daily Practice Quizzes (DPQ) Crash Course. Powered by intelligent NTA-style mock tests, instant error logging, and comprehensive syllabus coverage.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/register.html" class="bg-anatomyRed text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-red-600 transition shadow-lg text-center w-full sm:w-auto">
+          Enroll Now
+        </a>
+        <a href="https://drive.google.com/file/d/1lWRq59S4GfLb7Rpp6OtH2WIDyr8JqMh8/view?usp=sharing" target="_blank" class="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-gray-700 transition border border-gray-700 text-center w-full sm:w-auto inline-block">
+          View Curriculum
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white border-b border-gray-200 py-6 shadow-sm relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-8 md:gap-16 text-center text-gray-500 font-semibold">
+      <div><i class="fas fa-book-open text-xl mb-2 text-deepOcean"></i><br>100+ DPQs</div>
+      <div><i class="fas fa-brain text-xl mb-2 text-deepOcean"></i><br>Detailed Solutions</div>
+      <div><i class="fas fa-chart-pie text-xl mb-2 text-deepOcean"></i><br>Error Analytics</div>
+    </div>
+  </div>
+
+  <div id="features" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-extrabold text-deepOcean">Why Choose Shiksharthi?</h2>
+        <p class="mt-4 text-gray-500 max-w-2xl mx-auto">We don't just give you questions; we give you a system to permanently fix your weak concepts.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-8 border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition bg-white transform hover:-translate-y-1">
+          <div class="bg-red-50 w-14 h-14 rounded-lg flex items-center justify-center text-anatomyRed text-2xl mb-6"><i class="fas fa-microscope"></i></div>
+          <h3 class="text-xl font-bold mb-3 text-deepOcean">High-Yield DPQs</h3>
+          <p class="text-gray-600 leading-relaxed">Daily carefully curated practice modules covering Physics, Chemistry, and Biology aligned with the exact difficulty of NEET.</p>
+        </div>
+        <div class="p-8 border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition bg-white transform hover:-translate-y-1">
+          <div class="bg-red-50 w-14 h-14 rounded-lg flex items-center justify-center text-anatomyRed text-2xl mb-6"><i class="fas fa-laptop-code"></i></div>
+          <h3 class="text-xl font-bold mb-3 text-deepOcean">Smart CBT Portal</h3>
+          <p class="text-gray-600 leading-relaxed">Experience the pressure of the real exam with our Computer Based Testing interface, complete with a countdown timer and instant grading.</p>
+        </div>
+        <div class="p-8 border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition bg-white transform hover:-translate-y-1">
+          <div class="bg-red-50 w-14 h-14 rounded-lg flex items-center justify-center text-anatomyRed text-2xl mb-6"><i class="fas fa-chart-line"></i></div>
+          <h3 class="text-xl font-bold mb-3 text-deepOcean">Automated Error Logging</h3>
+          <p class="text-gray-600 leading-relaxed">Never make the same mistake twice. Our database automatically tracks the specific NTA concepts you get wrong.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pricing" class="py-20 bg-white border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-extrabold text-deepOcean mb-4">Simple, Transparent Pricing</h2>
+      <p class="text-gray-500 mb-12">One payment. Complete access until NEET 2026.</p>
+      
+      <div class="bg-deepOcean rounded-3xl shadow-xl overflow-hidden text-left flex flex-col md:flex-row transform transition hover:shadow-2xl">
+        <div class="p-8 md:p-12 md:w-2/3">
+          <div class="uppercase tracking-wide text-sm text-anatomyRed font-bold mb-1">Most Popular</div>
+          <h3 class="text-2xl font-bold text-white mb-2">NEET 2026 Crash Course</h3>
+          <p class="text-gray-400 mb-6">Full access to the Question Bank, Daily Quizzes, and Error Log Database.</p>
+          <ul class="space-y-3 text-gray-300">
+            <li><i class="fas fa-check text-anatomyRed mr-2"></i> All Physics, Chemistry, Biology Modules</li>
+            <li><i class="fas fa-check text-anatomyRed mr-2"></i> Detailed Step-by-Step Solutions</li>
+            <li><i class="fas fa-check text-anatomyRed mr-2"></i> Performance Tracking Dashboard</li>
+          </ul>
+        </div>
+        <div class="bg-gray-800 p-8 md:p-12 md:w-1/3 flex flex-col justify-center items-center text-center">
+          <span class="text-gray-400 line-through mb-1">₹4,999</span>
+          <span class="text-5xl font-extrabold text-white mb-6">₹1,899</span>
+          <a href="/register.html" class="w-full bg-anatomyRed text-white font-bold py-3 rounded-lg hover:bg-red-600 transition shadow-md">
+            Get Access
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-2xl font-bold text-deepOcean mb-6">Ready to secure your medical seat?</h2>
+      <a href="/register.html" class="bg-deepOcean text-white px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-800 transition shadow-lg inline-block">
+        Create Your Free Account
+      </a>
+    </div>
+  </div>
+
+  <footer class="bg-white border-t border-gray-200 pt-10 pb-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <span class="font-bold text-xl text-deepOcean">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
+          <p class="mt-4 text-gray-500 text-sm">Empowering medical aspirants with precision-driven DPQs and analytics.</p>
+          <div class="mt-4 text-sm text-gray-600">
+            <p><i class="fas fa-envelope mr-2"></i> shiksharthicourse@gmail.com</p>
+            <p class="mt-2"><i class="fas fa-phone mr-2"></i> +91 79754 41411</p>
+            <p class="mt-2"><i class="fas fa-map-marker-alt mr-2"></i> India</p>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-deepOcean mb-4">Platform</h4>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li><button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'});" class="hover:text-anatomyRed transition">Features</button></li>
+            <li><button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'});" class="hover:text-anatomyRed transition">Pricing</button></li>
+            <li><a href="/register.html" class="hover:text-anatomyRed transition">Register</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-deepOcean mb-4">Legal & Policies</h4>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li><button onclick="document.getElementById('tncModal').classList.remove('hidden')" class="hover:text-anatomyRed transition">Terms & Conditions</button></li>
+            <li><button onclick="document.getElementById('privacyModal').classList.remove('hidden')" class="hover:text-anatomyRed transition">Privacy Policy</button></li>
+            <li><button onclick="document.getElementById('refundModal').classList.remove('hidden')" class="hover:text-anatomyRed transition">Refund & Cancellation</button></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-100 pt-6 text-center text-sm text-gray-400">
+        <p>&copy; 2026 Shiksharthi Preparation. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="tncModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+      <button onclick="document.getElementById('tncModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
+      <h2 class="text-2xl font-bold mb-4 text-deepOcean">Terms & Conditions</h2>
+      <div class="text-sm text-gray-600 space-y-3">
+        <p>Welcome to Shiksharthi NEET. By accessing our platform, you agree to these terms.</p>
+        <p>1. <strong>Access:</strong> The NEET 2026 Crash Course access is valid until the date of the NEET 2026 examination.</p>
+        <p>2. <strong>Account Sharing:</strong> Sharing login credentials is strictly prohibited and will result in immediate account termination without refund.</p>
+        <p>3. <strong>Content:</strong> All DPQs, solutions, and website content are intellectual property of Shiksharthi and may not be reproduced.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="privacyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+      <button onclick="document.getElementById('privacyModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
+      <h2 class="text-2xl font-bold mb-4 text-deepOcean">Privacy Policy</h2>
+      <div class="text-sm text-gray-600 space-y-3">
+        <p>We respect your privacy. Here is how we handle your data:</p>
+        <p>1. <strong>Data Collection:</strong> We collect your name, email, and phone number solely for account creation and communication.</p>
+        <p>2. <strong>Data Protection:</strong> Your personal data is stored securely and is never sold to third parties.</p>
+        <p>3. <strong>Payments:</strong> All course payments are securely processed by you via standard UPI applications using our QR code. We do not process, collect, or store any credit card, bank account, or UPI PIN details on our servers.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="refundModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+      <button onclick="document.getElementById('refundModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
+      <h2 class="text-2xl font-bold mb-4 text-deepOcean">Refund & Cancellation Policy</h2>
+      <div class="text-sm text-gray-600 space-y-3">
+        <p>Please read our refund policy carefully before purchasing the crash course:</p>
+        <p>1. <strong>Digital Goods:</strong> As this is an instant-access digital product, <strong>all sales are final and non-refundable</strong> once the course content is unlocked.</p>
+        <p>2. <strong>Account Activation:</strong> Because activation relies on manual verification of your payment screenshot, please allow 2-4 hours for access to be granted. If you do not receive access within this timeframe, please email shiksharthicourse@gmail.com for immediate resolution.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('mobileMenuBtn');
+    const menu = document.getElementById('mobileMenu');
+    const icon = btn.querySelector('i');
+
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+      if(menu.classList.contains('hidden')) {
+        icon.className = 'fas fa-bars';
+      } else {
+        icon.className = 'fas fa-times';
+      }
+    });
+  </script>
+</body>
+</html>

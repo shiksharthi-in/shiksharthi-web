@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Shiksharthi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Initialize Supabase Client with your keys
+    const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+    <div class="text-center mb-6">
+      <h2 class="text-3xl font-extrabold text-gray-900">Welcome Back</h2>
+      <p class="text-gray-500 mt-2">Login to your Shiksharthi account.</p>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Email Address</label>
+        <input type="email" name="email" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Registered Phone Number</label>
+        <input type="tel" name="phone" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+      </div>
+      
+      <button type="submit" id="loginBtn" class="w-full bg-gray-900 text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition shadow-md">
+        Login
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">Don't have an account? <a href="/register.html" class="text-red-500 hover:underline font-bold">Register here</a></p>
+    </div>
+  </div>
+
+  <script>
+    async function handleLogin(event) {
+      event.preventDefault();
+      var btn = document.getElementById('loginBtn');
+      btn.innerText = "Authenticating...";
+      btn.disabled = true;
+
+      // Removes accidental invisible spaces from typing/autofill
+      var email = document.getElementById('loginForm').email.value.trim();
+      var phone = document.getElementById('loginForm').phone.value.trim();
+
+      try {
+        // Query Supabase to find a user matching the email and phone
+        const { data, error } = await supabase
+          .from('Users')
+          .select('*')
+          .eq('Email', email)
+          .eq('Phone', phone)
+          .single(); // .single() expects exactly one match
+
+        if (error || !data) {
+          alert("Account not found or details incorrect.");
+          btn.innerText = "Login";
+          btn.disabled = false;
+        } else {
+          // Store user data in browser memory temporarily
+          sessionStorage.setItem("shiksharthi_user", data.FullName);
+          sessionStorage.setItem("shiksharthi_status", data.EnrollmentStatus);
+          
+          // Replace the form with a manual "Continue" button
+          var container = document.querySelector('.bg-white');
+          container.innerHTML = `
+            <div class="text-center py-4">
+              <div class="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">✓</div>
+              <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Login Successful!</h2>
+              <p class="text-gray-500 mb-8">Welcome back, <b>${data.FullName}</b>.</p>
+              <a href="/dashboard.html" class="w-full block bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition shadow-md text-lg">
+                Enter Dashboard ➔
+              </a>
+            </div>
+          `;
+        }
+      } catch (err) {
+        alert("Server Error: " + err.message);
+        btn.innerText = "Login";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

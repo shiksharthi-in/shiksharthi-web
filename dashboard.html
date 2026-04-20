@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Shiksharthi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
+  <style>
+    /* Disable text selection */
+    body {
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+    .bg-anatomyRed { background-color: #EF4444; }
+    .text-anatomyRed { color: #EF4444; }
+    .bg-deepOcean { background-color: #0F172A; }
+    .text-deepOcean { color: #0F172A; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <nav class="bg-gray-900 text-white shadow-md p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <span class="font-bold text-xl cursor-pointer" onclick="window.location.href='/index.html'">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
+      <button onclick="logout()" class="text-sm bg-gray-700 px-4 py-2 rounded-md hover:bg-red-500 transition font-bold">Logout</button>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto mt-10 px-4 pb-12">
+    <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100">
+      
+      <h1 class="text-3xl font-bold text-gray-800">Welcome, <span id="userName" class="text-anatomyRed">Student</span>!</h1>
+      <p class="mt-2 text-gray-600">Account Status: <span id="userStatus" class="font-bold px-3 py-1 rounded text-sm uppercase tracking-wide"></span></p>
+      
+      <hr class="my-6">
+
+      <div id="paymentWall" class="hidden bg-red-50 border border-red-200 p-8 rounded-xl text-center max-w-lg mx-auto shadow-sm">
+        <h2 class="text-2xl font-extrabold text-red-700 mb-2">Unlock Your Crash Course</h2>
+        <p class="text-gray-700 mb-6">Complete your payment of <strong class="text-lg">₹1,899</strong> via UPI to unlock all DPQs, mock tests, and the error logging system.</p>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm inline-block mb-4 border border-gray-200">
+          <img src="https://drive.google.com/thumbnail?id=1ssiM6MyYniBN0b3kDN-CmLT4wtXUMg1R&sz=w500" alt="Scan to Pay ₹1899" class="w-48 h-48 mx-auto object-contain">
+        </div>
+
+        <p class="text-lg font-bold text-gray-800 mb-4">Scan with any UPI App</p>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-5 text-left mt-2 rounded-r-lg shadow-inner">
+          <h3 class="font-bold text-yellow-800 text-lg mb-2"><i class="fas fa-clipboard-list mr-2"></i>Next Steps:</h3>
+          <ol class="list-decimal ml-5 text-sm text-yellow-800 space-y-2 font-medium">
+            <li>Scan the QR code above and pay exactly <strong>₹1,899</strong>.</li>
+            <li>Take a screenshot of your successful payment receipt.</li>
+            <li>Email the screenshot to <a href="mailto:shiksharthicourse@gmail.com" class="text-blue-600 underline">shiksharthicourse@gmail.com</a> from your registered email.</li>
+          </ol>
+        </div>
+        
+        <p class="text-xs text-gray-500 mt-6 font-medium bg-gray-100 py-2 rounded-md">
+          <i class="fas fa-clock text-gray-400 mr-1"></i> Your account will be manually activated within 2-4 hours of verifying the payment.
+        </p>
+      </div>
+
+      <div id="courseContent" class="hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Your Learning Track</h2>
+        
+        <div class="space-y-6">
+          
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 01: Foundation & High-Yield Core</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Kinematics | Atomic Structure | Cell Biology</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1eTsCEoU4f9ggxkvSgmUnQJOtvIKuXlma/view?usp=drive_link" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the 20-page guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-01'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-01'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 02: Advanced Concepts & Application</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Dynamics | Chemical Bonding | Plant Physiology</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1t9zPW1vf2UVxQkvHD10kuDNIL3TdBV37/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 2 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-02'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-02'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+
+<div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 03: Core Mechanics & Structures</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Kinematics | Atomic Structure | Cell Biology</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1t4HWJYCP3Oqab-cv4u6cH2UCrbizIGqz/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 3 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-03'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-03'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+
+          <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+            <h2 class="text-xl font-extrabold text-gray-900 mb-1">Day 04: Rotational Dynamics & Molecular Genetics</h2>
+            <p class="text-gray-500 text-sm font-medium mb-6">Rotational Motion | Coordination Compounds | Molecular Basis of Inheritance</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1iKQ6dDBi9kWrpwWDLiVCBb8uGLdPDqIR/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 4 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-04'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-04'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition mt-6">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 5: Rotational Motion II, Coordination Chem II & Molecular Genetics III</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Rolling Dynamics, CFSE & Isomerism, Translation & HGP</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1MNMUPtfC6gMLG7903fNiX1vsU5dQ7nin/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 5 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-05'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-05'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+           
+           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition mt-6">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 6: Electrostatics I, GOC & Isomerism, Human Reproduction I</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Phys: Electric Charges & Fields | Chem: Electronic Displacements & Isomerism | Bio: Male & Female Reproductive Systems</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/12hojUJ2QK1mZ3e2fg7GwmAPbPoiW6V_9/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 6 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-06'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=mock-06'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition mt-6">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+              <div>
+                <h3 class="font-extrabold text-xl text-deepOcean">Day 7: Electrostatics II, SN1/SN2, Repro Health II</h3>
+                <p class="text-sm text-gray-500 font-medium mt-1">Physics: Electrostatics II & Capacitors | Chemistry: Reaction Mechanisms SN1/SN2 | Biology: Human Reproduction & Health II</p>
+              </div>
+              <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Unlocked</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <a href="https://drive.google.com/file/d/1pFObpH2F6mIt_Yp_Pcwn9JfTSQiku6ke/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
+                <p class="text-xs text-blue-700 mt-1">Read the Day 7 guide</p>
+              </a>
+
+              <button onclick="window.location.href='/quiz.html?id=DPQ-07'" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-pencil-alt"></i></div>
+                <h4 class="font-bold text-purple-900 text-sm">2. Daily Practice</h4>
+                <p class="text-xs text-purple-700 mt-1">200 High-Yield MCQs</p>
+              </button>
+
+              <button onclick="window.location.href='/quiz.html?id=MOCK-07'" class="bg-red-50 hover:bg-red-100 border border-red-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
+                <div class="bg-anatomyRed text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-stopwatch"></i></div>
+                <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
+                <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
+              </button>
+
+            </div>
+          </div>
+          </div>
+
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mt-10">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-chart-line text-anatomyRed mr-2"></i> Performance History</h2>
+          <p class="text-sm text-gray-500 mb-4">A complete log of all submitted DPQs and Mock Tests.</p>
+          
+          <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full bg-white text-left">
+              <thead class="bg-gray-100 text-gray-600 font-bold text-xs uppercase tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Date & Time</th>
+                  <th class="py-3 px-4">Test ID</th>
+                  <th class="py-3 px-4">Score</th>
+                  <th class="py-3 px-4">Correct</th>
+                  <th class="py-3 px-4">Incorrect</th>
+                </tr>
+              </thead>
+              <tbody id="progressTableBody" class="text-gray-700 text-sm divide-y divide-gray-100">
+                <tr><td colspan="5" class="text-center py-6 text-gray-500 animate-pulse">Loading performance data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Pull the user data we saved during login
+    var userName = sessionStorage.getItem("shiksharthi_user");
+    var userStatus = sessionStorage.getItem("shiksharthi_status");
+
+    // Security check: Kick out unauthorized users
+    if (!userName) {
+      window.location.href = "/login.html";
+    }
+
+    // Populate user info
+    document.getElementById('userName').innerText = userName;
+    var statusBadge = document.getElementById('userStatus');
+    
+    // UI Routing based on payment status
+    if (userStatus === "Paid" || userStatus === "Premium") {
+      statusBadge.innerText = "Premium Access";
+      statusBadge.className += " bg-green-100 text-green-700 border border-green-200";
+      document.getElementById('courseContent').classList.remove('hidden');
+
+      // Fetch past scores for the Performance History table via Supabase
+      fetchPerformanceHistory();
+
+    } else {
+      statusBadge.innerText = "Unpaid";
+      statusBadge.className += " bg-red-100 text-red-700 border border-red-200";
+      document.getElementById('paymentWall').classList.remove('hidden');
+    }
+
+    async function fetchPerformanceHistory() {
+      try {
+        // We query the Quiz_Attempts table for this specific user
+        const { data, error } = await supabase
+          .from('Quiz_Attempts')
+          .select('*')
+          .eq('Student Name', userName) // Ensure column name matches your CSV header exactly!
+          .order('Timestamp', { ascending: false });
+
+        let tbody = document.getElementById('progressTableBody');
+        
+        if (error) {
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500 italic">No tests submitted yet. Take your first DPQ!</td></tr>';
+          return;
+        }
+        
+        let html = '';
+        data.forEach(row => {
+          let formattedDate = new Date(row.Timestamp).toLocaleString('en-IN', { 
+            day: '2-digit', month: 'short', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit' 
+          });
+          
+          html += `<tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-4 text-gray-500 text-xs">${formattedDate}</td>
+            <td class="py-3 px-4 font-bold text-deepOcean">${row['Quiz ID']}</td>
+            <td class="py-3 px-4 font-black text-anatomyRed">${row['Total Score']}</td>
+            <td class="py-3 px-4 text-green-600 font-medium">${row.Correct}</td>
+            <td class="py-3 px-4 text-red-500 font-medium">${row.Incorrect}</td>
+          </tr>`;
+        });
+        tbody.innerHTML = html;
+        
+      } catch (err) {
+        console.error("Error fetching progress:", err);
+        document.getElementById('progressTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-6 text-red-500 italic">Error loading data.</td></tr>';
+      }
+    }
+
+    // Secure Logout
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "/index.html";
+    }
+
+    // Disable Right-Click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+  </script>
+</body>
+</html>

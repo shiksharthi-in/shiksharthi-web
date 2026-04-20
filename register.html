@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Shiksharthi NEET</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .bg-deepOcean { background-color: #0F172A; }
+    .text-deepOcean { color: #0F172A; }
+    .bg-anatomyRed { background-color: #EF4444; }
+    .text-anatomyRed { color: #EF4444; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+  <nav class="bg-white shadow-md w-full z-50 top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Index'">
+          <span class="font-bold text-2xl text-deepOcean">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex-grow flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-md w-full">
+      
+      <div id="formContainer">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-deepOcean">Create Your Account</h2>
+          <p class="text-gray-500 mt-2">Join the ultimate NEET 2026 Crash Course.</p>
+        </div>
+        
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+            <input type="text" id="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-anatomyRed">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+            <input type="email" id="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-anatomyRed">
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number (WhatsApp)</label>
+            <input type="tel" id="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-anatomyRed">
+          </div>
+          <button type="submit" id="submitBtn" class="w-full bg-anatomyRed text-white font-bold py-3 rounded-lg hover:bg-red-600 transition shadow-md">
+            Register Now
+          </button>
+        </form>
+        <p class="text-center text-sm text-gray-500 mt-4">
+          Already have an account? <a href="<?!= getAppUrl() ?>?page=Login" class="text-deepOcean font-bold hover:underline">Log In</a>
+        </p>
+      </div>
+
+      <div id="successMessage" class="hidden text-center py-6">
+        <div class="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
+          <i class="fas fa-check"></i>
+        </div>
+        <h2 class="text-2xl font-extrabold text-deepOcean mb-2">Registration Completed!</h2>
+        <p class="text-gray-600 mb-8 font-medium">Your account has been successfully created. You are just one step away from unlocking the crash course.</p>
+        
+        <button onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Login'" class="w-full bg-anatomyRed hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:-translate-y-1 text-lg">
+          Log In to Make Payment <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function handleRegister(event) {
+      event.preventDefault();
+      
+      let btn = document.getElementById('submitBtn');
+      btn.innerText = "Registering...";
+      btn.disabled = true;
+      btn.classList.add('opacity-70');
+
+      let formObject = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value
+      };
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response === "SUCCESS") {
+            // Success! Hide the form and show the beautiful success state!
+            document.getElementById('formContainer').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+          } else {
+            // If the email already exists, show the error and reset the button
+            alert(response);
+            btn.innerText = "Register Now";
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+          }
+        })
+        .registerUser(formObject);
+    }
+  </script>
+</body>
+</html>
