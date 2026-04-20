@@ -503,7 +503,7 @@
       try {
         // Fetch Questions from Supabase using standardized variable
         const { data, error } = await supabaseClient
-          .from('Question_Bank')
+          .from('Shiksharthi_Question_Bank')
           .select('*')
           .eq('QuizID', quizId);
 
@@ -809,7 +809,7 @@
       
       try {
         const { data, error } = await supabaseClient
-          .from('Quiz_Attempts')
+          .from('Shiksharthi_Quiz_Attempts')
           .insert([{
             "Timestamp": new Date().toISOString(),
             "Student Name": studentName,

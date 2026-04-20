@@ -62,7 +62,7 @@
         // Query Supabase to find a user matching the email and phone
         // Uses the 'supabaseClient' variable to avoid naming conflicts
         const { data, error } = await supabaseClient
-          .from('Users')
+          .from('Shiksharthi_Users')
           .select('*')
           .eq('Email', email)
           .eq('Phone', phone)

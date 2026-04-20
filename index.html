@@ -26,7 +26,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <div class="flex-shrink-0 flex items-center">
-          <span class="font-bold text-2xl text-deepOcean">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
+          <span class="font-bold text-2xl text-deepOcean cursor-pointer" onclick="window.location.href='/index.html'">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
         </div>
         
         <div class="hidden md:flex items-center space-x-4">
@@ -45,8 +45,8 @@
     
     <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0 top-16">
       <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
-        <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden'); document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars';" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700 hover:text-anatomyRed">Features</button>
-        <button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden'); document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars';" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700 hover:text-anatomyRed">Pricing</button>
+        <button onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden');" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700">Features</button>
+        <button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'}); document.getElementById('mobileMenu').classList.add('hidden');" class="block w-full text-left px-3 py-3 border-b border-gray-50 rounded-md text-base font-medium text-gray-700">Pricing</button>
         <a href="/login.html" class="block w-full text-center mt-4 bg-anatomyRed text-white px-5 py-3 rounded-md font-bold hover:bg-red-600 transition shadow-sm">Login / Register</a>
       </div>
     </div>
@@ -81,7 +81,6 @@
       <div><i class="fas fa-chart-pie text-xl mb-2 text-deepOcean"></i><br>Error Analytics</div>
     </div>
   </div>
-
   <div id="features" class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -187,10 +186,9 @@
       <button onclick="document.getElementById('tncModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
       <h2 class="text-2xl font-bold mb-4 text-deepOcean">Terms & Conditions</h2>
       <div class="text-sm text-gray-600 space-y-3">
-        <p>Welcome to Shiksharthi NEET. By accessing our platform, you agree to these terms.</p>
         <p>1. <strong>Access:</strong> The NEET 2026 Crash Course access is valid until the date of the NEET 2026 examination.</p>
-        <p>2. <strong>Account Sharing:</strong> Sharing login credentials is strictly prohibited and will result in immediate account termination without refund.</p>
-        <p>3. <strong>Content:</strong> All DPQs, solutions, and website content are intellectual property of Shiksharthi and may not be reproduced.</p>
+        <p>2. <strong>Account Sharing:</strong> Sharing login credentials is strictly prohibited and will result in immediate account termination.</p>
+        <p>3. <strong>Content:</strong> All content is intellectual property of Shiksharthi.</p>
       </div>
     </div>
   </div>
@@ -200,10 +198,8 @@
       <button onclick="document.getElementById('privacyModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
       <h2 class="text-2xl font-bold mb-4 text-deepOcean">Privacy Policy</h2>
       <div class="text-sm text-gray-600 space-y-3">
-        <p>We respect your privacy. Here is how we handle your data:</p>
-        <p>1. <strong>Data Collection:</strong> We collect your name, email, and phone number solely for account creation and communication.</p>
-        <p>2. <strong>Data Protection:</strong> Your personal data is stored securely and is never sold to third parties.</p>
-        <p>3. <strong>Payments:</strong> All course payments are securely processed by you via standard UPI applications using our QR code. We do not process, collect, or store any credit card, bank account, or UPI PIN details on our servers.</p>
+        <p>1. <strong>Data:</strong> We collect name, email, and phone solely for account management.</p>
+        <p>2. <strong>Protection:</strong> Your data is stored securely in Supabase and never sold.</p>
       </div>
     </div>
   </div>
@@ -211,11 +207,10 @@
   <div id="refundModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
     <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
       <button onclick="document.getElementById('refundModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
-      <h2 class="text-2xl font-bold mb-4 text-deepOcean">Refund & Cancellation Policy</h2>
+      <h2 class="text-2xl font-bold mb-4 text-deepOcean">Refund Policy</h2>
       <div class="text-sm text-gray-600 space-y-3">
-        <p>Please read our refund policy carefully before purchasing the crash course:</p>
-        <p>1. <strong>Digital Goods:</strong> As this is an instant-access digital product, <strong>all sales are final and non-refundable</strong> once the course content is unlocked.</p>
-        <p>2. <strong>Account Activation:</strong> Because activation relies on manual verification of your payment screenshot, please allow 2-4 hours for access to be granted. If you do not receive access within this timeframe, please email shiksharthicourse@gmail.com for immediate resolution.</p>
+        <p>1. <strong>Digital Goods:</strong> All sales are final and non-refundable once content is unlocked.</p>
+        <p>2. <strong>Activation:</strong> Allow 2-4 hours for manual verification of payment.</p>
       </div>
     </div>
   </div>

@@ -339,13 +339,13 @@
 
     /**
      * fetchPerformanceHistory
-     * Queries the 'Quiz_Attempts' table for records matching the logged-in user
+     * Queries the 'Shiksharthi_Quiz_Attempts' table for records matching the logged-in user
      */
     async function fetchPerformanceHistory() {
       try {
         // Use standardized supabaseClient variable
         const { data, error } = await supabaseClient
-          .from('Quiz_Attempts')
+          .from('Shiksharthi_Quiz_Attempts')
           .select('*')
           .eq('Student Name', userName) // Ensure this matches your Supabase column name
           .order('Timestamp', { ascending: false });

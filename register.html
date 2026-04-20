@@ -103,10 +103,10 @@
     const phone = document.getElementById('phone').value.trim();
 
     try {
-      // 1. Insert the new user into the Supabase 'Users' table
+      // 1. Insert the new user into the Supabase 'Shiksharthi_Users' table
       // Uses the 'supabaseClient' initialized in the <head>
       const { data, error } = await supabaseClient
-        .from('Users')
+        .from('Shiksharthi_Users')
         .insert([
           { 
             FullName: fullName, 
