@@ -11,7 +11,7 @@
     // Initialize Supabase Client with your keys
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 </head>
 <body class="bg-gray-50 flex items-center justify-center min-h-screen">
@@ -55,12 +55,13 @@
 
       try {
         // Query Supabase to find a user matching the email and phone
-        const { data, error } = await supabase
-          .from('Users')
-          .select('*')
-          .eq('Email', email)
-          .eq('Phone', phone)
-          .single(); // .single() expects exactly one match
+        // Update this line inside your handleLogin function
+const { data, error } = await supabaseClient
+  .from('Users')
+  .select('*')
+  .eq('Email', email)
+  .eq('Phone', phone)
+  .single(); // .single() expects exactly one match
 
         if (error || !data) {
           alert("Account not found or details incorrect.");
