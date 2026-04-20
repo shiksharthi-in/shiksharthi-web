@@ -2,109 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <base target="_top">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CBT Portal - Shiksharthi NEET</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
-<script>
-  // 1. SIUNITX PRE-PROCESSOR
-  // This intercepts standard siunitx scientific notation (e.g., \SI{1.6e-19}{J}) 
-  // and formats it correctly to \SI{1.6 \times 10^{-19}}{J} before MathJax renders it.
-  document.addEventListener("DOMContentLoaded", function() {
-    const walkDOM = function(node) {
-      if (node.nodeType === 3) { // Text node
-        let text = node.nodeValue;
-        // Matches \SI{num e exponent} or \num{num e exponent} (accounting for accidental spaces)
-        const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
-        if (siRegex.test(text)) {
-          node.nodeValue = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}\\}");
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Standardized Supabase Initialization
+    const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
+  <script>
+    // 1. SIUNITX PRE-PROCESSOR
+    document.addEventListener("DOMContentLoaded", function() {
+      const walkDOM = function(node) {
+        if (node.nodeType === 3) { 
+          let text = node.nodeValue;
+          const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
+          if (siRegex.test(text)) {
+            node.nodeValue = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}\\}");
+          }
+        } else if (node.nodeType === 1 && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") {
+          for (let i = 0; i < node.childNodes.length; i++) {
+            walkDOM(node.childNodes[i]);
+          }
         }
-      } else if (node.nodeType === 1 && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") {
-        for (let i = 0; i < node.childNodes.length; i++) {
-          walkDOM(node.childNodes[i]);
+      };
+      walkDOM(document.body);
+    });
+
+    // 2. MATHJAX CONFIGURATION
+    window.MathJax = {
+      loader: {load: ['[tex]/mhchem']}, 
+      tex: {
+        packages: {'[+]': ['mhchem']},  
+        inlineMath: [['$', '$'], ['\\(', '\\)']], 
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        macros: {
+          SI: ["{#1}\\,\\mathrm{#2}", 2],
+          num: ["{#1}", 1],
+          farad: "F", F: "F", electronvolt: "eV", eV: "eV", henry: "H", H: "H",
+          weber: "Wb", Wb: "Wb", tesla: "T", T: "T", coulomb: "C", C: "C",
+          volt: "V", V: "V", ampere: "A", A: "A", ohm: "\\Omega",
+          joule: "J", J: "J", newton: "N", N: "N", watt: "W", W: "W",
+          pascal: "Pa", Pa: "Pa", hertz: "Hz", Hz: "Hz", kelvin: "K", K: "K",
+          celsius: "^\\circ\\mathrm{C}", degree: "^\\circ", 
+          kg: "kg", kilogram: "kg", m: "m", meter: "m", s: "s", second: "s",
+          g: "g", gram: "g", mol: "mol", mole: "mol", liter: "L", L: "L",
+          ml: "mL", mL: "mL", cm: "cm", mm: "mm", nm: "nm", angstrom: "\\text{\\AA}",
+          mmHg: "mmHg", atm: "atm", tera: "T", giga: "G", mega: "M", kilo: "k",
+          centi: "c", milli: "m", micro: "\\mu", nano: "n", pico: "p",
+          percent: "\\%", hour: "\\text{ hour}", day: "\\text{ day}"
         }
-      }
+      },
+      startup: { typeset: true } 
     };
-    walkDOM(document.body);
-  });
-
-  // 2. MATHJAX CONFIGURATION
-  window.MathJax = {
-    loader: {load: ['[tex]/mhchem']}, 
-    tex: {
-      packages: {'[+]': ['mhchem']},  
-      inlineMath: [['$', '$'], ['\\(', '\\)']], 
-      displayMath: [['$$', '$$'], ['\\[', '\\]']],
-      macros: {
-        // --- Core siunitx Wrappers ---
-        SI: ["{#1}\\,\\mathrm{#2}", 2],
-        num: ["{#1}", 1],
-        
-        // --- Electromagnetism & Modern Physics (FIXES YOUR SCREENSHOTS) ---
-        farad: "F", F: "F",
-        electronvolt: "eV", eV: "eV",
-        henry: "H", H: "H",
-        weber: "Wb", Wb: "Wb",
-        tesla: "T", T: "T",
-        coulomb: "C", C: "C",
-        volt: "V", V: "V",
-        ampere: "A", A: "A",
-        ohm: "\\Omega",
-        
-        // --- Mechanics & Thermodynamics ---
-        joule: "J", J: "J",          
-        newton: "N", N: "N",         
-        watt: "W", W: "W",
-        pascal: "Pa", Pa: "Pa",
-        hertz: "Hz", Hz: "Hz",
-        kelvin: "K", K: "K",
-        celsius: "^\\circ\\mathrm{C}",
-        degree: "^\\circ", 
-        
-        // --- Base Units & Chemistry ---
-        kg: "kg", kilogram: "kg",
-        m: "m", meter: "m",
-        s: "s", second: "s",
-        g: "g", gram: "g",
-        mol: "mol", mole: "mol",
-        liter: "L", L: "L",
-        ml: "mL", mL: "mL",
-        cm: "cm", mm: "mm", nm: "nm",
-        angstrom: "\\text{\\AA}",
-        mmHg: "mmHg", atm: "atm",
-        
-        // --- Prefixes ---
-        tera: "T",
-        giga: "G",
-        mega: "M",
-        kilo: "k",
-        centi: "c",
-        milli: "m",
-        micro: "\\mu",  
-        nano: "n",
-        pico: "p",
-        
-        // --- Utilities ---
-        percent: "\\%",
-        hour: "\\text{ hour}",
-        day: "\\text{ day}"
-      }
-    },
-    // Start rendering after the DOM and pre-processor are completely ready
-    startup: { typeset: true } 
-  };
-</script>
+  </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
   <style>
-    /* Disable text selection */
-body {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
-}
+    /* Disable text selection to maintain exam integrity */
+    body { 
+      -webkit-user-select: none; 
+      -ms-user-select: none; 
+      user-select: none; 
+    }
+    
     /* NTA Specific Colors & Palette */
     .bg-ntaBlue { background-color: #17a2b8; }
     .text-ntaBlue { color: #17a2b8; }
@@ -113,42 +78,123 @@ body {
     .bg-anatomyRed { background-color: #EF4444; }
     .text-anatomyRed { color: #EF4444; }
     
-    /* Scrollbar */
+    /* Custom Scrollbar for Questions Area */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     
-    /* Prevent Copy-Pasting */
-    .noselect {
+    .noselect { 
       -webkit-user-select: none; 
       -ms-user-select: none; 
       user-select: none; 
     }
 
-    /* Palette Badges */
-    .status-badge { width: 28px; height: 28px; display: inline-flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 0.85rem; }
-    .s-not-visited { background: #dedede; color: #495057; border: 1px solid #ccc; border-radius: 4px; }
-    .s-not-answered { background: #dc3545; color: white; border-radius: 4px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
-    .s-answered { background: #28a745; color: white; border-radius: 4px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
-    .s-review { background: #6f42c1; color: white; border-radius: 50%; }
-    .s-ans-review { background: #6f42c1; color: white; border-radius: 50%; position: relative; }
-    .s-ans-review::after { content: "✓"; position: absolute; bottom: -2px; right: -2px; background: #28a745; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid white;}
+    /* Palette Status Badge Logic */
+    .status-badge { 
+      width: 28px; 
+      height: 28px; 
+      display: inline-flex; 
+      justify-content: center; 
+      align-items: center; 
+      color: white; 
+      font-weight: bold; 
+      font-size: 0.85rem; 
+    }
+    
+    .s-not-visited { 
+      background: #dedede; 
+      color: #495057; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+    }
+    
+    .s-not-answered { 
+      background: #dc3545; 
+      color: white; 
+      border-radius: 4px; 
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+    }
+    
+    .s-answered { 
+      background: #28a745; 
+      color: white; 
+      border-radius: 4px; 
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+    }
+    
+    .s-review { 
+      background: #6f42c1; 
+      color: white; 
+      border-radius: 50%; 
+    }
+    
+    .s-ans-review { 
+      background: #6f42c1; 
+      color: white; 
+      border-radius: 50%; 
+      position: relative; 
+    }
+    
+    .s-ans-review::after { 
+      content: "✓"; 
+      position: absolute; 
+      bottom: -2px; 
+      right: -2px; 
+      background: #28a745; 
+      color: white; 
+      border-radius: 50%; 
+      width: 14px; 
+      height: 14px; 
+      font-size: 10px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: 1px solid white;
+    }
 
-    /* Palette Buttons */
-    .palette-btn { width: 100%; aspect-ratio: 1; cursor: pointer; border: none; font-size: 1.05rem; transition: transform 0.1s; display: inline-flex; justify-content: center; align-items: center; font-weight: bold; }
-    .palette-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+    /* Palette Interaction */
+    .palette-btn { 
+      width: 100%; 
+      aspect-ratio: 1; 
+      cursor: pointer; 
+      border: none; 
+      font-size: 1.05rem; 
+      transition: transform 0.1s; 
+      display: inline-flex; 
+      justify-content: center; 
+      align-items: center; 
+      font-weight: bold; 
+    }
     
-    /* Radio Selection */
-    input[type="radio"]:checked + div { border-color: #17a2b8; background-color: #eef7fa; box-shadow: inset 0 0 0 1px #17a2b8;}
+    .palette-btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15); 
+    }
     
-    /* Subject Tabs */
-    .tab-active { background-color: #17a2b8; color: white; border-color: #17a2b8; }
-    .tab-inactive { background-color: white; color: #495057; border-color: #dee2e6; }
+    /* Option Selection Highlighting */
+    input[type="radio"]:checked + div { 
+      border-color: #17a2b8; 
+      background-color: #eef7fa; 
+      box-shadow: inset 0 0 0 1px #17a2b8;
+    }
+    
+    /* Subject Tab Styling */
+    .tab-active { 
+      background-color: #17a2b8; 
+      color: white; 
+      border-color: #17a2b8; 
+    }
+    
+    .tab-inactive { 
+      background-color: white; 
+      color: #495057; 
+      border-color: #dee2e6; 
+    }
   </style>
 </head>
 <body class="bg-gray-100 font-sans h-screen flex flex-col overflow-hidden noselect" oncontextmenu="return false;">
-
-  <div class="bg-ntaBlue text-white px-6 py-3 flex justify-between items-center shadow-md z-20">
+	
+	<div class="bg-ntaBlue text-white px-6 py-3 flex justify-between items-center shadow-md z-20">
     <h1 class="text-lg font-bold tracking-wide" id="examTitle">NEET Mock Examination</h1>
     <div class="text-lg font-bold bg-white text-red-600 px-4 py-1 rounded shadow-inner" id="timerBox">
       Time Left: <span id="timer">--:--:--</span>
@@ -158,7 +204,7 @@ body {
   <div id="loadingScreen" class="absolute inset-0 top-[60px] bg-white z-50 flex flex-col items-center justify-center">
     <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-ntaBlue mb-4"></div>
     <h2 class="text-2xl font-bold text-gray-800">Initializing CBT Environment V2...</h2>
-    <p class="text-gray-500 mt-2">Fetching module data and configuring LaTeX engine.</p>
+    <p class="text-gray-500 mt-2">Fetching module data securely from database.</p>
   </div>
 
   <div id="instructionScreen" class="hidden absolute inset-0 top-[60px] bg-white z-40 overflow-y-auto p-6 md:p-10">
@@ -176,7 +222,7 @@ body {
             <div class="flex items-center gap-3"><span class="status-badge s-not-answered">2</span> Not Answered</div>
             <div class="flex items-center gap-3"><span class="status-badge s-answered">1</span> Answered</div>
             <div class="flex items-center gap-3"><span class="status-badge s-review">4</span> Marked for Review</div>
-            <div class="flex items-center gap-3 col-span-1 md:col-span-2"><span class="status-badge s-ans-review">5</span> Answered & Marked for Review (Will be evaluated)</div>
+            <div class="flex items-center gap-3 col-span-1 md:col-span-2"><span class="status-badge s-ans-review">5</span> Answered & Marked for Review</div>
           </div>
         </li>
       </ol>
@@ -211,85 +257,85 @@ body {
       </div>
     </div>
   </div>
-
+  
   <div id="examInterface" class="hidden flex-1 flex flex-col md:flex-row overflow-hidden">
     
-  <div class="flex-1 flex flex-col bg-white border-r-2 border-gray-300 relative overflow-y-auto pb-20">
-      
-      <div class="flex bg-gray-100 border-b border-gray-300 p-2 gap-2" id="subjectTabs">
-        <button onclick="jumpToSection('Physics')" id="tab-Physics" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-active">Physics</button>
-        <button onclick="jumpToSection('Chemistry')" id="tab-Chemistry" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-inactive">Chemistry</button>
-        <button onclick="jumpToSection('Biology')" id="tab-Biology" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-inactive">Biology</button>
-      </div>
-
-      <div class="bg-gray-200 px-6 py-3 border-b border-gray-300 flex justify-between items-center">
-        <span class="bg-ntaBlue text-white px-3 py-1 rounded text-sm font-bold shadow-sm uppercase tracking-wider" id="qTypeLabel">Multiple Choice</span>
-        <span class="text-ntaBlue font-extrabold text-lg">Question <span id="qNumberDisplay">1</span></span>
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-6 md:p-8 text-gray-800 text-lg leading-relaxed">
-        <div id="qText" class="mb-6 font-medium"></div>
-
-        <div id="qImageContainer" class="hidden mb-6">
-          <img id="qImage" src="" alt="Question Figure" class="max-w-full max-h-64 object-contain border p-2 rounded shadow-sm">
+    <div class="flex-1 flex flex-col bg-white border-r-2 border-gray-300 relative overflow-y-auto pb-20">
+        
+        <div class="flex bg-gray-100 border-b border-gray-300 p-2 gap-2" id="subjectTabs">
+          <button onclick="jumpToSection('Physics')" id="tab-Physics" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-active">Physics</button>
+          <button onclick="jumpToSection('Chemistry')" id="tab-Chemistry" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-inactive">Chemistry</button>
+          <button onclick="jumpToSection('Biology')" id="tab-Biology" class="px-6 py-2 rounded-t font-bold border-t border-l border-r transition tab-inactive">Biology</button>
         </div>
 
-        <div class="space-y-3" id="optionsContainer">
-          <label class="block cursor-pointer">
-            <input type="radio" name="option" value="A" class="hidden peer" onchange="saveAnswer('A')">
-            <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
-              <span class="font-bold mr-3 text-gray-500">A.</span> <span id="optAText" class="flex-1"></span>
-            </div>
-          </label>
-          <label class="block cursor-pointer">
-            <input type="radio" name="option" value="B" class="hidden peer" onchange="saveAnswer('B')">
-            <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
-              <span class="font-bold mr-3 text-gray-500">B.</span> <span id="optBText" class="flex-1"></span>
-            </div>
-          </label>
-          <label class="block cursor-pointer">
-            <input type="radio" name="option" value="C" class="hidden peer" onchange="saveAnswer('C')">
-            <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
-              <span class="font-bold mr-3 text-gray-500">C.</span> <span id="optCText" class="flex-1"></span>
-            </div>
-          </label>
-          <label class="block cursor-pointer">
-            <input type="radio" name="option" value="D" class="hidden peer" onchange="saveAnswer('D')">
-            <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
-              <span class="font-bold mr-3 text-gray-500">D.</span> <span id="optDText" class="flex-1"></span>
-            </div>
-          </label>
+        <div class="bg-gray-200 px-6 py-3 border-b border-gray-300 flex justify-between items-center">
+          <span class="bg-ntaBlue text-white px-3 py-1 rounded text-sm font-bold shadow-sm uppercase tracking-wider" id="qTypeLabel">Multiple Choice</span>
+          <span class="text-ntaBlue font-extrabold text-lg">Question <span id="qNumberDisplay">1</span></span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-8 text-gray-800 text-lg leading-relaxed">
+          <div id="qText" class="mb-6 font-medium"></div>
+
+          <div id="qImageContainer" class="hidden mb-6">
+            <img id="qImage" src="" alt="Question Figure" class="max-w-full max-h-64 object-contain border p-2 rounded shadow-sm">
+          </div>
+
+          <div class="space-y-3" id="optionsContainer">
+            <label class="block cursor-pointer">
+              <input type="radio" name="option" value="A" class="hidden peer" onchange="saveAnswer('A')">
+              <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
+                <span class="font-bold mr-3 text-gray-500">A.</span> <span id="optAText" class="flex-1"></span>
+              </div>
+            </label>
+            <label class="block cursor-pointer">
+              <input type="radio" name="option" value="B" class="hidden peer" onchange="saveAnswer('B')">
+              <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
+                <span class="font-bold mr-3 text-gray-500">B.</span> <span id="optBText" class="flex-1"></span>
+              </div>
+            </label>
+            <label class="block cursor-pointer">
+              <input type="radio" name="option" value="C" class="hidden peer" onchange="saveAnswer('C')">
+              <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
+                <span class="font-bold mr-3 text-gray-500">C.</span> <span id="optCText" class="flex-1"></span>
+              </div>
+            </label>
+            <label class="block cursor-pointer">
+              <input type="radio" name="option" value="D" class="hidden peer" onchange="saveAnswer('D')">
+              <div class="border border-gray-300 rounded p-3 hover:bg-gray-50 transition flex items-start">
+                <span class="font-bold mr-3 text-gray-500">D.</span> <span id="optDText" class="flex-1"></span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-gray-100 border-t border-gray-300 p-4 flex justify-between items-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+          <div class="space-x-2">
+            <button onclick="handleAction('review')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded shadow transition">Mark for Review & Next</button>
+            <button onclick="handleAction('clear')" class="bg-white hover:bg-gray-200 text-gray-700 border border-gray-400 font-bold py-2 px-4 rounded shadow transition">Clear Response</button>
+          </div>
+          <button onclick="handleAction('save')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-8 rounded shadow transition text-lg">Save & Next</button>
         </div>
       </div>
 
-      <div class="bg-gray-100 border-t border-gray-300 p-4 flex justify-between items-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-        <div class="space-x-2">
-          <button onclick="handleAction('review')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded shadow transition">Mark for Review & Next</button>
-          <button onclick="handleAction('clear')" class="bg-white hover:bg-gray-200 text-gray-700 border border-gray-400 font-bold py-2 px-4 rounded shadow transition">Clear Response</button>
+      <div class="w-full md:w-80 h-1/3 md:h-auto bg-gray-200 flex flex-col z-10 border-t-2 md:border-t-0 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:shadow-[-2px_0_10px_rgba(0,0,0,0.05)]">
+        
+        <div class="bg-white p-4 border-b border-gray-300 text-xs font-medium grid grid-cols-2 gap-3 text-gray-700">
+          <div class="flex items-center gap-2"><span class="status-badge s-answered" id="cnt-ans">0</span> Answered</div>
+          <div class="flex items-center gap-2"><span class="status-badge s-not-answered" id="cnt-notans">0</span> Not Answered</div>
+          <div class="flex items-center gap-2"><span class="status-badge s-not-visited" id="cnt-notvis">0</span> Not Visited</div>
+          <div class="flex items-center gap-2"><span class="status-badge s-review" id="cnt-rev">0</span> Review</div>
+          <div class="flex items-center gap-2 col-span-2"><span class="status-badge s-ans-review" id="cnt-ansrev">0</span> Answered & Marked for Review</div>
         </div>
-        <button onclick="handleAction('save')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-8 rounded shadow transition text-lg">Save & Next</button>
-      </div>
-    </div>
 
-    <div class="w-full md:w-80 h-1/3 md:h-auto bg-gray-200 flex flex-col z-10 border-t-2 md:border-t-0 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:shadow-[-2px_0_10px_rgba(0,0,0,0.05)]">
-      
-      <div class="bg-white p-4 border-b border-gray-300 text-xs font-medium grid grid-cols-2 gap-3 text-gray-700">
-        <div class="flex items-center gap-2"><span class="status-badge s-answered" id="cnt-ans">0</span> Answered</div>
-        <div class="flex items-center gap-2"><span class="status-badge s-not-answered" id="cnt-notans">0</span> Not Answered</div>
-        <div class="flex items-center gap-2"><span class="status-badge s-not-visited" id="cnt-notvis">0</span> Not Visited</div>
-        <div class="flex items-center gap-2"><span class="status-badge s-review" id="cnt-rev">0</span> Review</div>
-        <div class="flex items-center gap-2 col-span-2"><span class="status-badge s-ans-review" id="cnt-ansrev">0</span> Answered & Marked for Review</div>
-      </div>
+        <div class="flex-1 overflow-y-auto p-4 bg-[#e9ecef]">
+          <h4 class="font-bold text-ntaBlue border-b-2 border-gray-300 pb-2 mb-4" id="paletteSubjectHeader">Physics Section</h4>
+          <div class="grid grid-cols-5 gap-2" id="paletteGrid"></div>
+        </div>
 
-      <div class="flex-1 overflow-y-auto p-4 bg-[#e9ecef]">
-        <h4 class="font-bold text-ntaBlue border-b-2 border-gray-300 pb-2 mb-4" id="paletteSubjectHeader">Physics Section</h4>
-        <div class="grid grid-cols-5 gap-2" id="paletteGrid"></div>
+        <div class="p-4 bg-white border-t border-gray-300">
+          <button onclick="submitExam()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded shadow transition text-lg">Submit Examination</button>
+        </div>
       </div>
-
-      <div class="p-4 bg-white border-t border-gray-300">
-        <button onclick="submitExam()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded shadow transition text-lg">Submit Examination</button>
-      </div>
-    </div>
   </div>
 
   <div id="resultsInterface" class="hidden absolute inset-0 top-[60px] bg-gray-50 z-50 overflow-y-auto p-4 md:p-8">
@@ -307,39 +353,40 @@ body {
           <span class="bg-gray-200 text-gray-700 px-5 py-2 rounded-lg border border-gray-300">Unattempted: <span id="res-unattempted">0</span></span>
         </div>
         
-        <button onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Dashboard'" class="mt-8 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-10 rounded-lg shadow-md transition">Return to Dashboard</button>
+        <button onclick="window.location.href='/dashboard.html'" class="mt-8 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-10 rounded-lg shadow-md transition">Return to Dashboard</button>
       </div>
 
       <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2">Detailed Solutions & Review</h3>
-      <div id="solutionsContainer" class="space-y-6 pb-10">
-        </div>
-
+      <div id="solutionsContainer" class="space-y-6 pb-10"></div>
     </div>
   </div>
-
   <script>
-    const quizId = "<?= quizId ?>";
+    // 1. GLOBAL STATE & PARAMETERS
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizId = urlParams.get('id');
+    
     let questions = [];
     let currentIndex = 0;
     let qStatus = {}; 
     let studentAnswers = {}; 
 
-    // Disable Right-Click
+    // Security: Disable Right-Click context menu
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // Helper: Converts LaTeX text formatting and wraps // ----------------------------------------------------------------------
-   function cleanLatexText(text) {
+    /**
+     * cleanLatexText
+     * Preserving your 100% original logic for TikZ stripping, math lockboxing, 
+     * and NTA-style Assertion-Reason/Tabular formatting.
+     */
+    function cleanLatexText(text) {
       if (!text) return "";
       text = String(text);
       
-      // 0. Force-strip leftover TikZ/centerfig from the database
+      // Force-strip leftover TikZ/centerfig artifacts
       text = text.replace(/\\begin\{centerfig\}[\s\S]*?\\end\{centerfig\}/g, "");
       text = text.replace(/%<\*Fig.*?%<\/Fig.*?>/g, "");
       
-      // ====================================================================
-      // 1. MATH "LOCKBOX" LOGIC (CRITICAL: MUST BE DONE FIRST)
-      // This protects math blocks from getting HTML tags injected inside them
-      // ====================================================================
+      // 1. MATH "LOCKBOX" LOGIC: Protects LaTeX from standard regex replacements
       let mathBlocks = [];
       text = text.replace(/\$([^$]+)\$/g, function(match, inner) {
           mathBlocks.push(inner);
@@ -352,29 +399,23 @@ body {
           return "PAREN_BLOCK_" + (parenBlocks.length - 1) + "_";
       });
 
-      // ====================================================================
       // 2. STANDARD TEXT FORMATTING
-      // ====================================================================
       text = text.replace(/\\textbf\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<b>$1</b>");
       text = text.replace(/\\textit\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<i>$1</i>"); 
-      
-      // Fix for "Fill-in-the-blank" underlines (e.g., \underline{\hspace{1cm}})
       text = text.replace(/\\underline\{\\hspace\{[^}]+\}\}/g, "________");
-      // Fix for standard text underlines
       text = text.replace(/\\underline\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<u>$1</u>");
-      
-      text = text.replace(/\\%/g, "%"); // Fixes \%
-      text = text.replace(/\\&/g, "&amp;"); // Fixes \&
-      text = text.replace(/\\AA/g, "Å"); // Angstrom
-      // --- ADD THESE 4 LINES TO FIX UNDERSCORES AND NAKED UNITS ---
-      text = text.replace(/\\_/g, "_"); // Fixes ____ fill-in-the-blanks
+      text = text.replace(/\\%/g, "%"); 
+      text = text.replace(/\\&/g, "&amp;"); 
+      text = text.replace(/\\AA/g, "Å"); 
+      text = text.replace(/\\_/g, "_"); 
       text = text.replace(/\\percent\b/g, "\\%");
       text = text.replace(/\\hour\b/g, "hour");
       text = text.replace(/\\day\b/g, "day");
+      
       // 3. Difficulty Badge Converter
       text = text.replace(/\\difficulty\{([^}]+)\}/g, "<span class='inline-block bg-white border border-gray-300 text-gray-700 text-xs font-extrabold px-2 py-1 rounded shadow-sm mb-3 uppercase tracking-wider'>Difficulty: $1</span><br/>");
       
-      // 4. Assertion-Reason formatting
+      // 4. Assertion-Reason formatting logic
       text = text.replace(/\\begin\{assertionreason\}/g, "<div class='bg-gray-50 border-l-4 border-ntaBlue p-4 my-3 rounded-r-lg shadow-sm text-gray-800'>");
       text = text.replace(/\\end\{assertionreason\}/g, "</div>");
       
@@ -395,7 +436,7 @@ body {
         }
       }
 
-      // 5. Tabular environment parser
+      // 5. Tabular environment parser for NTA tables
       text = text.replace(/\\begin\{tabular\}\{([^{}]|\{[^{}]*\})*\}([\s\S]*?)\\end\{tabular\}/g, function(match, colDef, innerContent) {
           let cleanedContent = innerContent.replace(/\\rowcolor\{[^}]+\}/g, "");
           cleanedContent = cleanedContent.replace(/\\hline|\\toprule|\\midrule|\\bottomrule/g, "");
@@ -423,16 +464,10 @@ body {
       text = text.replace(/\\begin\{center\}/g, "");
       text = text.replace(/\\end\{center\}/g, "");
       
-      // // ====================================================================
-      // 6. RESTORE MATH BLOCKS
-      // ====================================================================
-      // Safely wrap any \ce and \SI that were left naked in the raw text
+      // 6. RESTORE MATH BLOCKS: Re-inject the protected LaTeX
       text = text.replace(/\\ce\{((?:[^{}]|\{[^{}]*\})+)\}/g, "\\(\\ce{$1}\\)");
-      
-      // Updated regex: Changed + to * to allow empty arguments
       text = text.replace(/\\SI\{((?:[^{}]|\{[^{}]*\})*)\}\{((?:[^{}]|\{[^{}]*\})*)\}/g, "\\(\\SI{$1}{$2}\\)");
       
-      // Restore the protected math blocks safely
       text = text.replace(/PAREN_BLOCK_(\d+)_/g, function(match, index) {
           return parenBlocks[index];
       });
@@ -443,69 +478,93 @@ body {
       return text;
     }
 
-    // ERROR DIAGNOSTIC HELPER
+    // Diagnostic UI for Database Failures
     function showDiagnosticError(errorMessage) {
       document.getElementById('loadingScreen').innerHTML = `
         <div class="text-center px-6 mt-10">
           <i class="fas fa-database text-6xl text-red-500 mb-4"></i>
-          <h2 class="text-3xl font-bold text-gray-800">Database Connection Failed</h2>
+          <h2 class="text-3xl font-bold text-gray-800">Database Error</h2>
           <div class="mt-4 text-left bg-red-50 border-l-4 border-red-500 p-4 rounded text-red-800 max-w-lg mx-auto shadow-sm">
-            <p class="font-bold mb-2">Error Log:</p>
+            <p class="font-bold mb-2">Details:</p>
             <p class="font-mono text-sm">${errorMessage}</p>
           </div>
-          <button onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Dashboard'" class="mt-8 bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-8 rounded shadow transition">Go Back to Dashboard</button>
+          <button onclick="window.location.href='/dashboard.html'" class="mt-8 bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-8 rounded shadow transition">Go Back to Dashboard</button>
         </div>
       `;
     }
-
-    // INITIAL LOAD (Waits for page to be ready)
-    document.addEventListener("DOMContentLoaded", function() {
+    
+    // INITIAL LOAD: Replacement for old google.script.run
+    document.addEventListener("DOMContentLoaded", async function() {
       if (!quizId || quizId.trim() === "") {
-        showDiagnosticError("No Quiz ID found in the URL. Please launch the test from the Dashboard.");
+        showDiagnosticError("No Quiz ID found in URL. Launch from Dashboard.");
         return;
       }
 
-      google.script.run
-        .withSuccessHandler(function(response) {
-          if (response.status === "SUCCESS") {
-            questions = response.data;
-            document.getElementById('examTitle').innerText = "NEET DPQ - " + quizId.replace('DPQ-', '');
-            
-            for(let i=0; i<questions.length; i++) qStatus[i] = 'not-visited';
-            
-            buildPalette();
-            updatePaletteCounters();
+      try {
+        // Fetch Questions from Supabase using standardized variable
+        const { data, error } = await supabaseClient
+          .from('Question_Bank')
+          .select('*')
+          .eq('QuizID', quizId);
 
-            document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('instructionScreen').classList.remove('hidden');
-          } else {
-            showDiagnosticError(response.message);
-          }
-        })
-        .withFailureHandler(function(error) {
-            showDiagnosticError("Server Crash: " + error.message);
-        })
-        .getQuizData(quizId);
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          // Map database columns to local objects
+          questions = data.map(row => ({
+            qNum: row.QuestionNum,
+            type: row.Type || "mcq",
+            text: row.QuestionText || "",
+            optA: row.OptA || "",
+            optB: row.OptB || "",
+            optC: row.OptC || "",
+            optD: row.OptD || "",
+            answer: row.CorrectAnswer || "",
+            solution: row.SolutionText || "No solution provided.",
+            image: row.ExpectedImage || null
+          }));
+
+          // Set Exam title dynamically
+          document.getElementById('examTitle').innerText = "NEET DPQ - " + quizId.replace('DPQ-', '');
+          
+          // Set initial question status
+          for(let i=0; i<questions.length; i++) qStatus[i] = 'not-visited';
+          
+          // Initialize UI components
+          buildPalette();
+          updatePaletteCounters();
+
+          // Switch screens
+          document.getElementById('loadingScreen').classList.add('hidden');
+          document.getElementById('instructionScreen').classList.remove('hidden');
+        } else {
+          showDiagnosticError("No questions found matching ID: '" + quizId + "'.");
+        }
+      } catch (err) {
+        showDiagnosticError("Fetch Failure: " + err.message);
+      }
     });
-
-    // Instructions Logic
+    // 1. EXAM INITIALIZATION
     function toggleProceed() {
       document.getElementById('proceedBtn').disabled = !document.getElementById('declarationCheck').checked;
     }
 
     function startExam() {
-      if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch((e)=>{});
+      // Attempt to enter fullscreen for NTA-like environment
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch((e) => {});
+      }
       document.getElementById('instructionScreen').classList.add('hidden');
       document.getElementById('examInterface').classList.remove('hidden');
       jumpToQuestion(0);
-      startTimer(12000); 
+      startTimer(12000); // 200 minutes (12000 seconds)
     }
 
-    // Palette & Subject Logic
+    // 2. PALETTE & SECTION MANAGEMENT
     function buildPalette() {
       const grid = document.getElementById('paletteGrid');
       grid.innerHTML = '';
-      for(let i=0; i<questions.length; i++) {
+      for (let i = 0; i < questions.length; i++) {
         let btn = document.createElement('button');
         btn.className = `palette-btn s-${qStatus[i]}`;
         btn.innerText = i + 1; 
@@ -518,52 +577,67 @@ body {
     function updateSectionTabs(index) {
       let section = 'Physics';
       let startIdx = 0, endIdx = 49;
-      if (index >= 50 && index <= 99) { section = 'Chemistry'; startIdx = 50; endIdx = 99; } 
-      else if (index >= 100) { section = 'Biology'; startIdx = 100; endIdx = questions.length - 1; }
+      
+      // Traditional NEET structure mapping
+      if (index >= 50 && index <= 99) { 
+        section = 'Chemistry'; startIdx = 50; endIdx = 99; 
+      } else if (index >= 100) { 
+        section = 'Biology'; startIdx = 100; endIdx = questions.length - 1; 
+      }
 
       ['Physics', 'Chemistry', 'Biology'].forEach(sub => {
         let el = document.getElementById(`tab-${sub}`);
-        if(el) el.className = `px-6 py-2 rounded-t font-bold border-t border-l border-r transition ${sub === section ? 'tab-active' : 'tab-inactive'}`;
+        if (el) {
+          el.className = `px-6 py-2 rounded-t font-bold border-t border-l border-r transition ${sub === section ? 'tab-active' : 'tab-inactive'}`;
+        }
       });
 
       let header = document.getElementById('paletteSubjectHeader');
-      if(header) header.innerText = `${section} Section`;
+      if (header) header.innerText = `${section} Section`;
 
-      for(let i=0; i<questions.length; i++) {
+      // Filter palette visibility based on section
+      for (let i = 0; i < questions.length; i++) {
         let btn = document.getElementById(`pal-btn-${i}`);
-        if(btn) btn.style.display = (i >= startIdx && i <= endIdx) ? 'inline-flex' : 'none';
+        if (btn) btn.style.display = (i >= startIdx && i <= endIdx) ? 'inline-flex' : 'none';
       }
 
       let activeBtn = document.getElementById(`pal-btn-${index}`);
-      if(activeBtn) activeBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (activeBtn) activeBtn.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     function jumpToSection(subject) {
-      if(subject === 'Physics') jumpToQuestion(0);
-      else if(subject === 'Chemistry') jumpToQuestion(50);
-      else if(subject === 'Biology') jumpToQuestion(100);
+      if (subject === 'Physics') jumpToQuestion(0);
+      else if (subject === 'Chemistry') jumpToQuestion(50);
+      else if (subject === 'Biology') jumpToQuestion(100);
     }
 
-    // Question Rendering
+    // 3. QUESTION NAVIGATION & SELECTION
     function jumpToQuestion(index) {
-      if (index >= questions.length) return;
+      if (index >= questions.length || index < 0) return;
       
+      // Update status of the question the user is leaving
       if (qStatus[currentIndex] === 'not-visited') setStatus(currentIndex, 'not-answered');
+      
       currentIndex = index;
+      
+      // Update status of the new question
       if (qStatus[currentIndex] === 'not-visited') setStatus(currentIndex, 'not-answered');
 
       let q = questions[currentIndex];
       document.getElementById('qNumberDisplay').innerText = currentIndex + 1;
       
+      // Render Content
       document.getElementById('qText').innerHTML = cleanLatexText(q.text);
       document.getElementById('optAText').innerHTML = cleanLatexText(q.optA);
       document.getElementById('optBText').innerHTML = cleanLatexText(q.optB);
       document.getElementById('optCText').innerHTML = cleanLatexText(q.optC);
       document.getElementById('optDText').innerHTML = cleanLatexText(q.optD);
       
+      // Update Question Type Label
       let typeLabel = document.getElementById('qTypeLabel');
-      if(typeLabel) typeLabel.innerText = q.type ? q.type : "Multiple Choice";
+      if (typeLabel) typeLabel.innerText = q.type ? q.type : "Multiple Choice";
 
+      // Handle Figure Images
       let imgContainer = document.getElementById('qImageContainer');
       let imgTag = document.getElementById('qImage');
       if (imgContainer && imgTag) {
@@ -572,34 +646,35 @@ body {
           imgContainer.classList.remove('hidden');
         } else {
           imgContainer.classList.add('hidden');
-          imgTag.src = "";
         }
       }
 
+      // Restore previously selected radio button
       let radios = document.getElementsByName('option');
       radios.forEach(r => r.checked = false);
       if (studentAnswers[currentIndex]) {
         let selectedRadio = document.querySelector(`input[value="${studentAnswers[currentIndex]}"]`);
-        if(selectedRadio) selectedRadio.checked = true;
+        if (selectedRadio) selectedRadio.checked = true;
       }
 
       updateSectionTabs(currentIndex);
       if (window.MathJax) MathJax.typesetPromise().catch(err => {});
     }
 
-    // Actions & State
-    function saveAnswer(value) { studentAnswers[currentIndex] = value; }
+    function saveAnswer(value) { 
+      studentAnswers[currentIndex] = value; 
+    }
 
     function setStatus(index, status) {
       qStatus[index] = status;
       let btn = document.getElementById(`pal-btn-${index}`);
-      if(btn) btn.className = `palette-btn s-${status}`;
+      if (btn) btn.className = `palette-btn s-${status}`;
       updatePaletteCounters();
     }
 
     function updatePaletteCounters() {
       let counts = { 'answered': 0, 'not-answered': 0, 'not-visited': 0, 'review': 0, 'ans-review': 0 };
-      for(let i=0; i<questions.length; i++) counts[qStatus[i]]++;
+      for (let i = 0; i < questions.length; i++) counts[qStatus[i]]++;
       
       document.getElementById('cnt-ans').innerText = counts['answered'];
       document.getElementById('cnt-notans').innerText = counts['not-answered'];
@@ -619,13 +694,18 @@ body {
         return; 
       }
 
-      if (action === 'save') setStatus(currentIndex, hasAnswer ? 'answered' : 'not-answered');
-      else if (action === 'review') setStatus(currentIndex, hasAnswer ? 'ans-review' : 'review');
+      if (action === 'save') {
+        setStatus(currentIndex, hasAnswer ? 'answered' : 'not-answered');
+      } else if (action === 'review') {
+        setStatus(currentIndex, hasAnswer ? 'ans-review' : 'review');
+      }
 
-      if (currentIndex < questions.length - 1) jumpToQuestion(currentIndex + 1);
+      if (currentIndex < questions.length - 1) {
+        jumpToQuestion(currentIndex + 1);
+      }
     }
 
-    // Timer & Submission
+    // 4. TIMER & SUBMISSION LOGIC
     let timerInterval;
     function startTimer(seconds) {
       let timeRemaining = seconds;
@@ -643,7 +723,7 @@ body {
       }, 1000);
     }
 
-    function submitExam() {
+    async function submitExam() {
       if (!confirm("Are you sure you want to submit? You cannot change your answers after submission.")) return;
 
       clearInterval(timerInterval);
@@ -669,6 +749,7 @@ body {
           borderClass = "border-red-400 shadow-[0_0_10px_rgba(248,113,113,0.2)]";
         }
 
+        // Advanced solution formatting
         let rawSolution = q.solution || "No detailed solution provided.";
         let cleanSolution = rawSolution
             .replace(/\\begin\{enumerate\}/g, '<ol class="list-decimal ml-6 mt-2 space-y-3">')
@@ -703,6 +784,7 @@ body {
         `;
       }
 
+      // Display Final UI
       document.getElementById('finalScoreDisplay').innerText = `${score} / ${questions.length * 4}`;
       document.getElementById('res-correct').innerText = correctCount;
       document.getElementById('res-incorrect').innerText = incorrectCount;
@@ -713,9 +795,39 @@ body {
       document.getElementById('resultsInterface').classList.remove('hidden');
 
       if (window.MathJax) MathJax.typesetPromise().catch(err => console.log(err));
+      
+      // Critical Call: Push scores to database
+      saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount);
+    }
 
+    /**
+     * saveAttemptToSupabase
+     * Replaces the old Google Apps Script server function
+     */
+    async function saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount) {
       let studentName = sessionStorage.getItem("shiksharthi_user") || "Unknown Student";
-      google.script.run.saveQuizAttempt(studentName, quizId, score, correctCount, incorrectCount, unattemptedCount);
+      
+      try {
+        const { data, error } = await supabaseClient
+          .from('Quiz_Attempts')
+          .insert([{
+            "Timestamp": new Date().toISOString(),
+            "Student Name": studentName,
+            "Quiz ID": quizId,
+            "Total Score": score,
+            "Correct": correctCount,
+            "Incorrect": incorrectCount,
+            "Unattempted": unattemptedCount
+          }]);
+
+        if (error) {
+          console.error("Supabase Save Error:", error.message);
+        } else {
+          console.log("Attempt saved successfully!");
+        }
+      } catch (e) {
+        console.error("Unexpected error saving attempt:", e);
+      }
     }
   </script>
 </body>

@@ -2,16 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <base target="_top">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - Shiksharthi NEET</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Standardized Supabase Initialization
+    const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    
+    // We use window.supabase to avoid the "supabase is not a function" error
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
   <style>
     .bg-deepOcean { background-color: #0F172A; }
     .text-deepOcean { color: #0F172A; }
     .bg-anatomyRed { background-color: #EF4444; }
     .text-anatomyRed { color: #EF4444; }
+    /* Prevent text selection to protect your question content */
+    body { -webkit-user-select: none; user-select: none; }
   </style>
 </head>
 <body class="bg-gray-50 font-sans min-h-screen flex flex-col">
@@ -19,13 +32,12 @@
   <nav class="bg-white shadow-md w-full z-50 top-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
-        <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Index'">
+        <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.location.href='/index.html'">
           <span class="font-bold text-2xl text-deepOcean">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
         </div>
       </div>
     </div>
   </nav>
-
   <div class="flex-grow flex items-center justify-center p-4">
     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-md w-full">
       
@@ -53,7 +65,7 @@
           </button>
         </form>
         <p class="text-center text-sm text-gray-500 mt-4">
-          Already have an account? <a href="<?!= getAppUrl() ?>?page=Login" class="text-deepOcean font-bold hover:underline">Log In</a>
+          Already have an account? <a href="/login.html" class="text-deepOcean font-bold hover:underline">Log In</a>
         </p>
       </div>
 
@@ -64,45 +76,74 @@
         <h2 class="text-2xl font-extrabold text-deepOcean mb-2">Registration Completed!</h2>
         <p class="text-gray-600 mb-8 font-medium">Your account has been successfully created. You are just one step away from unlocking the crash course.</p>
         
-        <button onclick="window.top.location.href='<?!= getAppUrl() ?>?page=Login'" class="w-full bg-anatomyRed hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:-translate-y-1 text-lg">
+        <button onclick="window.location.href='/login.html'" class="w-full bg-anatomyRed hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:-translate-y-1 text-lg">
           Log In to Make Payment <i class="fas fa-arrow-right ml-2"></i>
         </button>
       </div>
 
     </div>
   </div>
-
   <script>
-    function handleRegister(event) {
-      event.preventDefault();
-      
-      let btn = document.getElementById('submitBtn');
-      btn.innerText = "Registering...";
-      btn.disabled = true;
-      btn.classList.add('opacity-70');
+  /**
+   * handleRegister
+   * Replaces the old google.script.run logic with Supabase insert
+   */
+  async function handleRegister(event) {
+    event.preventDefault();
+    
+    // UI Feedback: Disable button to prevent double-submission
+    let btn = document.getElementById('submitBtn');
+    btn.innerText = "Registering...";
+    btn.disabled = true;
+    btn.classList.add('opacity-70');
 
-      let formObject = {
-        fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value
-      };
+    // Get and trim values from the form inputs
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
 
-      google.script.run
-        .withSuccessHandler(function(response) {
-          if (response === "SUCCESS") {
-            // Success! Hide the form and show the beautiful success state!
-            document.getElementById('formContainer').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-          } else {
-            // If the email already exists, show the error and reset the button
-            alert(response);
-            btn.innerText = "Register Now";
-            btn.disabled = false;
-            btn.classList.remove('opacity-70');
+    try {
+      // 1. Insert the new user into the Supabase 'Users' table
+      // Uses the 'supabaseClient' initialized in the <head>
+      const { data, error } = await supabaseClient
+        .from('Users')
+        .insert([
+          { 
+            FullName: fullName, 
+            Email: email, 
+            Phone: phone,
+            EnrollmentStatus: "Unpaid" // Default status for new students
           }
-        })
-        .registerUser(formObject);
+        ]);
+
+      if (error) {
+        // Handle specific PostgreSQL error codes
+        // 23505 is the code for a Unique Constraint violation (duplicate email)
+        if (error.code === '23505') {
+          alert("This email is already registered. Please try logging in.");
+        } else {
+          alert("Registration Error: " + error.message);
+        }
+        
+        // Reset button state for another attempt
+        btn.innerText = "Register Now";
+        btn.disabled = false;
+        btn.classList.remove('opacity-70');
+      } else {
+        // 2. Success: Update the UI to show the success message state
+        document.getElementById('formContainer').classList.add('hidden');
+        document.getElementById('successMessage').classList.remove('hidden');
+      }
+    } catch (err) {
+      // Catch unexpected network or runtime errors
+      console.error("Unexpected error:", err);
+      alert("A system error occurred. Please try again later.");
+      
+      btn.innerText = "Register Now";
+      btn.disabled = false;
+      btn.classList.remove('opacity-70');
     }
-  </script>
+  }
+</script>
 </body>
 </html>

@@ -9,17 +9,20 @@
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // Standardized Supabase Initialization
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Use window.supabase to avoid naming conflicts with the library
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 
   <style>
-    /* Disable text selection */
+    /* Disable text selection to protect course content */
     body {
-      -webkit-user-select: none; /* Safari */
-      -ms-user-select: none; /* IE 10 and IE 11 */
-      user-select: none; /* Standard syntax */
+      -webkit-user-select: none; 
+      -ms-user-select: none; 
+      user-select: none; 
     }
     .bg-anatomyRed { background-color: #EF4444; }
     .text-anatomyRed { color: #EF4444; }
@@ -31,11 +34,14 @@
 
   <nav class="bg-gray-900 text-white shadow-md p-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <span class="font-bold text-xl cursor-pointer" onclick="window.location.href='/index.html'">Shiksharthi<span class="text-anatomyRed">NEET</span></span>
-      <button onclick="logout()" class="text-sm bg-gray-700 px-4 py-2 rounded-md hover:bg-red-500 transition font-bold">Logout</button>
+      <span class="font-bold text-xl cursor-pointer" onclick="window.location.href='/index.html'">
+        Shiksharthi<span class="text-anatomyRed">NEET</span>
+      </span>
+      <button onclick="logout()" class="text-sm bg-gray-700 px-4 py-2 rounded-md hover:bg-red-500 transition font-bold">
+        Logout
+      </button>
     </div>
   </nav>
-
   <div class="max-w-4xl mx-auto mt-10 px-4 pb-12">
     <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100">
       
@@ -67,8 +73,7 @@
           <i class="fas fa-clock text-gray-400 mr-1"></i> Your account will be manually activated within 2-4 hours of verifying the payment.
         </p>
       </div>
-
-      <div id="courseContent" class="hidden">
+	<div id="courseContent" class="hidden">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Your Learning Track</h2>
         
         <div class="space-y-6">
@@ -83,7 +88,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1eTsCEoU4f9ggxkvSgmUnQJOtvIKuXlma/view?usp=drive_link" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -101,7 +105,6 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
 
@@ -115,7 +118,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1t9zPW1vf2UVxQkvHD10kuDNIL3TdBV37/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -133,11 +135,10 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
 
-<div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
             <div class="flex justify-between items-center mb-4 border-b pb-4">
               <div>
                 <h3 class="font-extrabold text-xl text-deepOcean">Day 03: Core Mechanics & Structures</h3>
@@ -147,7 +148,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1t4HWJYCP3Oqab-cv4u6cH2UCrbizIGqz/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -165,7 +165,6 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
 
@@ -174,7 +173,6 @@
             <p class="text-gray-500 text-sm font-medium mb-6">Rotational Motion | Coordination Compounds | Molecular Basis of Inheritance</p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1iKQ6dDBi9kWrpwWDLiVCBb8uGLdPDqIR/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -192,7 +190,6 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
 
@@ -206,7 +203,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1MNMUPtfC6gMLG7903fNiX1vsU5dQ7nin/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -224,7 +220,6 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
            
@@ -238,7 +233,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/12hojUJ2QK1mZ3e2fg7GwmAPbPoiW6V_9/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -256,7 +250,6 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
 
@@ -270,7 +263,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
               <a href="https://drive.google.com/file/d/1pFObpH2F6mIt_Yp_Pcwn9JfTSQiku6ke/view?usp=sharing" target="_blank" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 p-4 rounded-lg flex flex-col items-center text-center transition group">
                 <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
                 <h4 class="font-bold text-blue-900 text-sm">1. Theory Module</h4>
@@ -288,13 +280,14 @@
                 <h4 class="font-bold text-red-900 text-sm">3. NTA Mock Test</h4>
                 <p class="text-xs text-red-700 mt-1">Strict 200-min Timer</p>
               </button>
-
             </div>
           </div>
-          </div>
-
+        </div>
+        
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mt-10">
-          <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-chart-line text-anatomyRed mr-2"></i> Performance History</h2>
+          <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
+            <i class="fas fa-chart-line text-anatomyRed mr-2"></i> Performance History
+          </h2>
           <p class="text-sm text-gray-500 mb-4">A complete log of all submitted DPQs and Mock Tests.</p>
           
           <div class="overflow-x-auto rounded-lg border border-gray-200">
@@ -309,59 +302,57 @@
                 </tr>
               </thead>
               <tbody id="progressTableBody" class="text-gray-700 text-sm divide-y divide-gray-100">
-                <tr><td colspan="5" class="text-center py-6 text-gray-500 animate-pulse">Loading performance data...</td></tr>
+                <tr>
+                  <td colspan="5" class="text-center py-6 text-gray-500 animate-pulse">Loading performance data...</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
-      </div>
+      </div> </div> </div> <script>
+    // 1. Session Management: Retrieve data saved during login
+    const userName = sessionStorage.getItem("shiksharthi_user");
+    const userStatus = sessionStorage.getItem("shiksharthi_status");
 
-    </div>
-  </div>
-
-  <script>
-    // Pull the user data we saved during login
-    var userName = sessionStorage.getItem("shiksharthi_user");
-    var userStatus = sessionStorage.getItem("shiksharthi_status");
-
-    // Security check: Kick out unauthorized users
+    // 2. Security Check: Redirect unauthorized visitors to login
     if (!userName) {
       window.location.href = "/login.html";
     }
 
-    // Populate user info
+    // 3. Populate UI Elements
     document.getElementById('userName').innerText = userName;
-    var statusBadge = document.getElementById('userStatus');
+    const statusBadge = document.getElementById('userStatus');
     
-    // UI Routing based on payment status
+    // 4. Content Routing based on Enrollment Status
     if (userStatus === "Paid" || userStatus === "Premium") {
       statusBadge.innerText = "Premium Access";
       statusBadge.className += " bg-green-100 text-green-700 border border-green-200";
       document.getElementById('courseContent').classList.remove('hidden');
 
-      // Fetch past scores for the Performance History table via Supabase
+      // Fetch student's specific test results from Supabase
       fetchPerformanceHistory();
-
     } else {
       statusBadge.innerText = "Unpaid";
       statusBadge.className += " bg-red-100 text-red-700 border border-red-200";
       document.getElementById('paymentWall').classList.remove('hidden');
     }
 
+    /**
+     * fetchPerformanceHistory
+     * Queries the 'Quiz_Attempts' table for records matching the logged-in user
+     */
     async function fetchPerformanceHistory() {
       try {
-        // We query the Quiz_Attempts table for this specific user
-        const { data, error } = await supabase
+        // Use standardized supabaseClient variable
+        const { data, error } = await supabaseClient
           .from('Quiz_Attempts')
           .select('*')
-          .eq('Student Name', userName) // Ensure column name matches your CSV header exactly!
+          .eq('Student Name', userName) // Ensure this matches your Supabase column name
           .order('Timestamp', { ascending: false });
 
-        let tbody = document.getElementById('progressTableBody');
+        const tbody = document.getElementById('progressTableBody');
         
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         if (!data || data.length === 0) {
           tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500 italic">No tests submitted yet. Take your first DPQ!</td></tr>';
@@ -370,7 +361,7 @@
         
         let html = '';
         data.forEach(row => {
-          let formattedDate = new Date(row.Timestamp).toLocaleString('en-IN', { 
+          const formattedDate = new Date(row.Timestamp).toLocaleString('en-IN', { 
             day: '2-digit', month: 'short', year: 'numeric', 
             hour: '2-digit', minute: '2-digit' 
           });
@@ -386,18 +377,21 @@
         tbody.innerHTML = html;
         
       } catch (err) {
-        console.error("Error fetching progress:", err);
-        document.getElementById('progressTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-6 text-red-500 italic">Error loading data.</td></tr>';
+        console.error("Error fetching progress:", err.message);
+        document.getElementById('progressTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-6 text-red-500 italic">Error loading performance data.</td></tr>';
       }
     }
 
-    // Secure Logout
+    /**
+     * logout
+     * Clears local session and returns user to the home page
+     */
     function logout() {
       sessionStorage.clear();
       window.location.href = "/index.html";
     }
 
-    // Disable Right-Click
+    // Protection: Disable Right-Click context menu
     document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
