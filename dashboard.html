@@ -347,7 +347,7 @@
         const { data, error } = await supabaseClient
           .from('Shiksharthi_Quiz_Attempts')
           .select('*')
-          .eq('Username', Username) // Ensure this matches your Supabase column name
+          .eq('Username', activeUser) // Ensure this matches your Supabase column name
           .order('Timestamp', { ascending: false });
 
         const tbody = document.getElementById('progressTableBody');
@@ -375,9 +375,12 @@
         tbody.innerHTML = html;
         
       } catch (err) {
-        console.error("Error fetching progress:", err.message);
-        document.getElementById('progressTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-6 text-red-500 italic">Error loading performance data.</td></tr>';
-      }
+      // ADD THIS ALERT LINE:
+      alert("Database Error: " + err.message); 
+      
+      console.error("Error fetching progress:", err.message);
+      document.getElementById('progressTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-6 text-red-500 italic">Error loading performance data.</td></tr>';
+    }
     }
 
     /**
