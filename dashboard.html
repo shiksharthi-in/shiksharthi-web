@@ -347,7 +347,7 @@
         const { data, error } = await supabaseClient
           .from('Shiksharthi_Quiz_Attempts')
           .select('*')
-          .eq('Username', studentName) // Ensure this matches your Supabase column name
+          .eq('Username', Username) // Ensure this matches your Supabase column name
           .order('Timestamp', { ascending: false });
 
         const tbody = document.getElementById('progressTableBody');
