@@ -830,14 +830,14 @@ function cleanLatexText(text) {
         const { data, error } = await supabaseClient
           .from('Shiksharthi_Quiz_Attempts')
           .insert([{
-            "Timestamp": new Date().toISOString(),
-            "Student Name": studentName,
-            "Quiz ID": quizId,
-            "Total Score": score,
-            "Correct": correctCount,
-            "Incorrect": incorrectCount,
-            "Unattempted": unattemptedCount
-          }]);
+  "Timestamp": new Date().toISOString(),
+  "Username": studentName,     // FIXED
+  "QuizID": quizId,            // FIXED
+  "Score": score,              // FIXED
+  "Correct": correctCount,
+  "Incorrect": incorrectCount,
+  "Unattempted": unattemptedCount
+}]);
 
         if (error) {
           console.error("Supabase Save Error:", error.message);
