@@ -12,21 +12,15 @@
   <script>
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
-    
-    // Initialized via window object to prevent library naming conflicts
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 
   <style>
-    /* Brand standards matching the Omni Architecture */
     .bg-deepOcean { background-color: #0F172A; }
     .text-deepOcean { color: #0F172A; }
     .bg-anatomyRed { background-color: #EF4444; }
     .text-anatomyRed { color: #EF4444; }
-    
-    /* Security: Prevent content duplication */
     body { -webkit-user-select: none; user-select: none; }
-    
     .transition-all { transition: all 0.3s ease; }
   </style>
 </head>
@@ -81,17 +75,6 @@
                      placeholder="your@email.com">
             </div>
           </div>
-          <div>
-            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">WhatsApp Phone Number</label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fas fa-phone-alt"></i>
-              </span>
-              <input type="tel" id="phone" required 
-                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
-                     placeholder="98765 43210">
-            </div>
-          </div>
 
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Primary Target Exam</label>
@@ -143,10 +126,6 @@
   </div>
 
   <script>
-    /**
-     * handleRegister
-     * Submits student data to the Supabase Relational SSOT. [cite: 306]
-     */
     async function handleRegister(event) {
       event.preventDefault();
       
@@ -156,56 +135,45 @@
       btn.disabled = true;
       btn.classList.add('opacity-70');
 
-      // Extract and trim form inputs
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
       const preference = document.getElementById('primaryPreference').value;
 
       try {
-        // 1. Insert into Shiksharthi_Users table
-        const { data, error } = await supabaseClient
-          .from('Shiksharthi_Users')
-          .insert([
-            { 
-              FullName: fullName, 
-              Email: email, 
-              Phone: phone,
-              EnrollmentStatus: "Unpaid", // Database marks as Unpaid; UI bypasses for promo [cite: 340, 360]
-              PrimaryPreference: preference
-            }
-          ]);
-
-        if (error) {
-          // PostgreSQL Code 23505: Unique Violation (Duplicate Email) [cite: 373]
-          if (error.code === '23505') {
-            alert("This email is already registered. Please proceed to the login page.");
-          } else {
-            alert("Registration Error: " + error.message);
-          }
-          
-          btn.innerHTML = originalText;
-          btn.disabled = false;
-          btn.classList.remove('opacity-70');
-        } else {
-          // 2. Set temporary local preference for first dashboard load [cite: 332]
-          sessionStorage.setItem("shiksharthi_preference", preference);
-          
-          // 3. Update UI to Success State
-          document.getElementById('formContainer').classList.add('hidden');
-          document.getElementById('successMessage').classList.remove('hidden');
-        }
-      } catch (err) {
-        console.error("Critical Registration Error:", err);
-        alert("A server sync error occurred. Please check your connection.");
-        
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        btn.classList.remove('opacity-70');
+  const { data, error } = await supabaseClient
+    .from('Shiksharthi_Users')
+    .insert([
+      { 
+        id: authData.user.id, // <--- ADD THIS LINE HERE
+        FullName: fullName, 
+        Email: email, 
+        EnrollmentStatus: "Unpaid", 
+        PrimaryPreference: preference,
+        Phone: phone // Ensure this variable exists in your scope as well
       }
-    }
+    ]);
 
-    // Security: Disable Right-Click to prevent content inspection [cite: 329]
+  if (error) {
+    if (error.code === '23505') {
+      alert("This email is already registered. Please proceed to the login page.");
+    } else {
+      alert("Registration Error: " + error.message);
+    }
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    btn.classList.remove('opacity-70');
+  } else {
+    sessionStorage.setItem("shiksharthi_preference", preference);
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('successMessage').classList.remove('hidden');
+  }
+} catch (err) {
+  console.error("Critical Registration Error:", err);
+  alert("A server sync error occurred. Please check your connection.");
+  btn.innerHTML = originalText;
+  btn.disabled = false;
+  btn.classList.remove('opacity-70');
+}
     document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
