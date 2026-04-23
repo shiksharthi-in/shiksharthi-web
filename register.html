@@ -140,16 +140,17 @@
       const preference = document.getElementById('primaryPreference').value;
 
       try {
+  // Use the ID generated from the auth.signUp step
   const { data, error } = await supabaseClient
     .from('Shiksharthi_Users')
     .insert([
       { 
-        id: authData.user.id, // <--- ADD THIS LINE HERE
-        FullName: fullName, 
-        Email: email, 
-        EnrollmentStatus: "Unpaid", 
-        PrimaryPreference: preference,
-        Phone: phone // Ensure this variable exists in your scope as well
+        id: authData.user.id,        // Fixed: Explicitly passing the ID 
+        FullName: fullName,          // From your fullName variable 
+        Email: email,               // From your email variable 
+        Phone: phone,               // Re-added: From your phone variable 
+        EnrollmentStatus: "Unpaid",  // Default status 
+        PrimaryPreference: preference // From your preference variable 
       }
     ]);
 
@@ -163,6 +164,7 @@
     btn.disabled = false;
     btn.classList.remove('opacity-70');
   } else {
+    // Success flow
     sessionStorage.setItem("shiksharthi_preference", preference);
     document.getElementById('formContainer').classList.add('hidden');
     document.getElementById('successMessage').classList.remove('hidden');
