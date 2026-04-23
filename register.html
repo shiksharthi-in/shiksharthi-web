@@ -137,86 +137,75 @@
     </div>
   </div>
 
-  <script>
+ <script>
     async function handleRegister(event) {
         event.preventDefault();
+        
+        console.log("Starting registration process..."); // Milestone 1
 
         const btn = document.getElementById('submitBtn');
         const originalText = btn.innerHTML;
         
-        // UI Feedback: Start Loading
+        // UI Feedback
         btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
         btn.disabled = true;
         btn.classList.add('opacity-70');
 
-        // 1. Capture all form values 
-        const fullName = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value; // Ensure you have an input with id="password"
-        const phone = document.getElementById('phone').value.trim(); // Captures the new field 
-        const preference = document.getElementById('primaryPreference').value;
-
         try {
-            // 2. Step One: Sign up the user in Supabase Auth
-            // This creates the user in the 'auth.users' table and gives us the ID 
-            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+            // 1. Capture ALL form values (The "phone" fix)
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value.trim(); // MUST BE DEFINED HERE
+            const preference = document.getElementById('primaryPreference').value;
+
+            console.log("Data captured:", { fullName, email, phone, preference }); // Milestone 2
+
+            // 2. Auth Sign Up
+            // Check if your client is named '_supabase' or 'supabaseClient'
+            const { data: authData, error: authError } = await _supabase.auth.signUp({
                 email: email,
                 password: password,
                 options: {
-                    data: {
-                        full_name: fullName,
-                    }
+                    data: { full_name: fullName }
                 }
             });
 
             if (authError) throw authError;
+            console.log("Auth successful, ID:", authData.user.id); // Milestone 3
 
-            // 3. Step Two: Create the public profile in 'Shiksharthi_Users' 
-            // We use the ID returned from the authData above
-            const { error: dbError } = await supabaseClient
+            // 3. Database Profile Insert
+            const { error: dbError } = await _supabase
                 .from('Shiksharthi_Users')
                 .insert([
                     { 
-                        id: authData.user.id,        // Link to the Auth user 
-                        FullName: fullName,          // Maps to FullName column 
-                        Email: email,               // Maps to Email column 
-                        Phone: phone,               // Maps to Phone column 
-                        EnrollmentStatus: "Unpaid",  // Maps to EnrollmentStatus column 
-                        PrimaryPreference: preference // Maps to PrimaryPreference column 
+                        id: authData.user.id,
+                        FullName: fullName,
+                        Email: email,
+                        Phone: phone,
+                        EnrollmentStatus: "Unpaid",
+                        PrimaryPreference: preference
                     }
                 ]);
 
-            if (dbError) {
-                // Handle specific PostgreSQL unique constraint error for email
-                if (dbError.code === '23505') {
-                    alert("This email is already registered. Please proceed to the login page.");
-                } else {
-                    alert("Database Error: " + dbError.message);
-                }
-                resetButton(btn, originalText);
-            } else {
-                // Success: Update UI 
-                sessionStorage.setItem("shiksharthi_preference", preference);
-                document.getElementById('formContainer').classList.add('hidden');
-                document.getElementById('successMessage').classList.remove('hidden');
-            }
+            if (dbError) throw dbError;
+            console.log("Database insert successful!"); // Milestone 4
+
+            // 4. Success UI Update
+            sessionStorage.setItem("shiksharthi_preference", preference);
+            document.getElementById('formContainer').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
 
         } catch (err) {
-            console.error("Critical Registration Error:", err);
-            alert("Registration failed: " + (err.message || "Please check your connection."));
-            resetButton(btn, originalText);
+            console.error("Caught Error:", err);
+            alert("Registration Failed: " + (err.message || "Unknown error occurred."));
+            
+            // Reset Button
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
         }
     }
-
-    // Helper function to restore button state
-    function resetButton(btn, originalText) {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        btn.classList.remove('opacity-70');
-    }
-
-    // Disable right-click as per your requirement 
-    document.addEventListener('contextmenu', event => event.preventDefault());
 </script>
 </body>
 </html>
