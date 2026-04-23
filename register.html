@@ -12,7 +12,6 @@
   <script>
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
-    // Use 'supabaseClient' consistently
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 
@@ -43,6 +42,7 @@
 
   <div class="flex-grow flex items-center justify-center p-4 py-12">
     <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 max-w-md w-full relative overflow-hidden transition-all">
+      
       <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-anatomyRed to-deepOcean"></div>
       
       <div id="formContainer">
@@ -89,14 +89,14 @@
           </div>
 
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Password</label>
+            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Secure Password</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <i class="fas fa-lock"></i>
               </span>
               <input type="password" id="password" required 
                      class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
-                     placeholder="••••••••">
+                     placeholder="Create a password">
             </div>
           </div>
 
@@ -117,6 +117,7 @@
                 <i class="fas fa-chevron-down"></i>
               </span>
             </div>
+            <p class="text-[10px] text-gray-400 mt-2 italic">* You will still have access to all courses in the library.</p>
           </div>
 
           <button type="submit" id="submitBtn" 
@@ -139,76 +140,86 @@
           Your account is active. During our limited-time launch promotion, you have 
           <b class="text-anatomyRed">FREE 100% All-Access</b> to all NEET and JEE modules.
         </p>
+        
         <button onclick="window.location.href='/login.html'" 
                 class="w-full bg-anatomyRed hover:bg-red-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 text-lg">
           Log In to Start Learning <i class="fas fa-arrow-right ml-2"></i>
         </button>
       </div>
+
     </div>
   </div>
 
   <script>
     async function handleRegister(event) {
-      event.preventDefault();
-      console.log("Starting registration process...");
+        event.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const originalText = btn.innerHTML;
+        
+        // UI Interaction
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Initializing Account...`;
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
 
-      const btn = document.getElementById('submitBtn');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
-      btn.disabled = true;
-      btn.classList.add('opacity-70');
+        try {
+            // Capture all inputs
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value.trim();
+            const preference = document.getElementById('primaryPreference').value;
 
-      try {
-        const fullName = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const phone = document.getElementById('phone').value.trim();
-        const preference = document.getElementById('primaryPreference').value;
+            // Step 1: Create Auth User
+            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: { 
+                      full_name: fullName,
+                      phone: phone,
+                      preference: preference
+                    }
+                }
+            });
 
-        console.log("Data captured:", { fullName, email, phone, preference });
+            if (authError) throw authError;
 
-        // Step 1: Sign up user for Authentication
-        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: { full_name: fullName }
-          }
-        });
+            // Step 2: Create/Update Shiksharthi_Users Record
+            // Note: We use .upsert() to handle potential trigger overlaps
+            const { error: dbError } = await supabaseClient
+                .from('Shiksharthi_Users')
+                .upsert([
+                    { 
+                        id: authData.user.id,
+                        FullName: fullName,
+                        Email: email,
+                        Phone: phone,
+                        EnrollmentStatus: "Unpaid",
+                        PrimaryPreference: preference
+                    }
+                ]);
 
-        if (authError) throw authError;
-        console.log("Auth successful, ID:", authData.user.id);
+            if (dbError) throw dbError;
 
-        // Step 2: Create profile in Shiksharthi_Users table
-        const { error: dbError } = await supabaseClient
-          .from('Shiksharthi_Users')
-          .insert([
-            { 
-              id: authData.user.id,
-              FullName: fullName,
-              Email: email,
-              Phone: phone,
-              EnrollmentStatus: "Unpaid",
-              PrimaryPreference: preference
-            }
-          ]);
+            // Success flow
+            sessionStorage.setItem("shiksharthi_preference", preference);
+            document.getElementById('formContainer').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
 
-        if (dbError) throw dbError;
-        console.log("Database insert successful!");
-
-        // Step 3: UI Completion
-        sessionStorage.setItem("shiksharthi_preference", preference);
-        document.getElementById('formContainer').classList.add('hidden');
-        document.getElementById('successMessage').classList.remove('hidden');
-
-      } catch (err) {
-        console.error("Caught Error:", err);
-        alert("Registration Failed: " + (err.message || "Unknown error occurred."));
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        btn.classList.remove('opacity-70');
-      }
+        } catch (err) {
+            console.error("Registration Error:", err);
+            alert("Registration Failed: " + (err.message || "Unknown error occurred."));
+            
+            // Reset Button State
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+        }
     }
+
+    // Security: Disable right-click
+    document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
 </html>
