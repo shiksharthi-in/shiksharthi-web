@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theory Reader | Shiksharthi PREP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    // V11.0: Advanced MathJax Configuration (Mirrored from quiz.html for absolute consistency)
+    window.MathJax = {
+      loader: {load: ['[tex]/mhchem']},
+      tex: {
+        packages: {'[+]': ['mhchem']},
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        macros: {
+          SI: ["{#1}\\,\\mathrm{#2}", 2],
+          num: ["{#1}", 1],
+          farad: "F", F: "F", electronvolt: "eV", eV: "eV", henry: "H", H: "H",
+          weber: "Wb", Wb: "Wb", tesla: "T", T: "T", coulomb: "C", C: "C",
+          volt: "V", V: "V", ampere: "A", A: "A", ohm: "\\Omega",
+          joule: "J", J: "J", newton: "N", N: "N", watt: "W", W: "W",
+          pascal: "Pa", Pa: "Pa", hertz: "Hz", Hz: "Hz", kelvin: "K", K: "K",
+          celsius: "^\\circ\\mathrm{C}", degree: "^\\circ", 
+          kg: "kg", kilogram: "kg", m: "m", meter: "m", s: "s", second: "s",
+          g: "g", gram: "g", mol: "mol", mole: "mol", liter: "L", L: "L",
+          ml: "mL", mL: "mL", cm: "cm", mm: "mm", nm: "nm", angstrom: "\\text{\\AA}",
+          mmHg: "mmHg", atm: "atm", tera: "T", giga: "G", mega: "M", kilo: "k",
+          centi: "c", milli: "m", micro: "\\mu", nano: "n", pico: "p",
+          percent: "\\%", hour: "\\text{ hour}", day: "\\text{ day}",
+          kilom: "\\mathrm{km}", centim: "\\mathrm{cm}", rad: "\\mathrm{rad}",
+          per: "/", squared: "^2", cubed: "^3"
+        }
+      },
+      startup: { typeset: true }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Security & Brand Styles */
+    body { -webkit-user-select: none; user-select: none; background-color: #f8fafc; }
+    @media print { body { display: none; } } /* Prevent printing of premium material */
+    
+    .bg-deepOcean { background-color: #0F172A; }
+    .text-deepOcean { color: #0F172A; }
+    .bg-anatomyRed { background-color: #EF4444; }
+    
+    /* Omni-Box Replica Classes for Seamless UI Integration */
+    .omni-concept { border-left: 6px solid #0F172A; background: #f1f5f9; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+    .omni-alert { border-left: 6px solid #EF4444; background: #fef2f2; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+    .omni-workedexample { border: 2px solid #e2e8f0; background: #ffffff; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    .omni-mechanism { border-left: 6px solid #10b981; background: #f0fdf4; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; }
+  </style>
+</head>
+<body class="antialiased text-gray-800" oncontextmenu="return false;">
+
+  <nav class="bg-deepOcean text-white p-4 sticky top-0 z-50 shadow-md">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <button onclick="window.location.href='/dashboard.html'" class="hover:text-gray-300 font-bold transition flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Return to Dashboard
+      </button>
+      <span id="headerTitle" class="font-extrabold uppercase tracking-widest text-sm bg-white text-deepOcean px-4 py-1 rounded shadow-inner">
+        Loading Reader...
+      </span>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto my-10 p-6 md:p-12 bg-white shadow-xl rounded-2xl min-h-screen border border-gray-200">
+    <div id="readerContent" class="text-lg leading-relaxed space-y-6">
+       
+       <div class="text-center py-20 text-gray-400 animate-pulse">
+          <i class="fas fa-book-reader text-6xl mb-4"></i>
+          <h2 class="text-2xl font-bold text-gray-600">Compiling Theory Module...</h2>
+          <p class="text-sm mt-2">Fetching chunks from SSOT Database</p>
+       </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Supabase Initialization
+    const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadTheoryModule() {
+      // 1. Get the requested chapter/identifier from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const fetchId = urlParams.get('id'); // Resolves to TheoryFilePath in Shiksharthi_Syllabus
+
+      if (!fetchId) {
+        document.getElementById('readerContent').innerHTML = `
+          <div class='text-red-500 font-bold text-center py-10'>
+            <i class="fas fa-exclamation-triangle text-4xl mb-3"></i><br>
+            Error: No Chapter ID specified. Please launch from the Dashboard.
+          </div>`;
+        return;
+      }
+
+      document.getElementById('headerTitle').innerText = fetchId;
+
+      try {
+        // 2. V11.0 Query: Fetch all chunks where the ChapterTitle OR id matches the URL parameter
+        // This allows you to group multiple chunks under one ChapterTitle (e.g., 'Kinematics')
+        const { data, error } = await supabaseClient
+          .from('Shiksharthi_Chapters')
+          .select('*')
+          .or(`ChapterTitle.eq."${fetchId}",id.eq."${fetchId}"`)
+          .order('id', { ascending: true }); // Ensures sequential ordering based on Semantic ID
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          let fullHtml = "";
+
+          // 3. Stitch the atomic chunks together
+          data.forEach(chunk => {
+            
+            // Dynamic Subject Color logic for the UI badges
+            let badgeColor = "bg-gray-100 text-gray-600 border-gray-200";
+            if (chunk.Course.includes("Physics") || chunk.Subject.includes("Physics")) badgeColor = "bg-blue-100 text-blue-700 border-blue-200";
+            if (chunk.Course.includes("Chemistry") || chunk.Subject.includes("Chemistry")) badgeColor = "bg-red-100 text-red-700 border-red-200";
+            if (chunk.Course.includes("Biology") || chunk.Subject.includes("Biology")) badgeColor = "bg-green-100 text-green-700 border-green-200";
+
+            // V11.0 Image Regex: Fix any missing static media links inside the HTML
+            let contentHTML = chunk.ContentHTML;
+            contentHTML = contentHTML.replace(/\\includegraphics(?:\[.*?\])?\{(.*?)\}/g, function(match, path) {
+                let filename = path.split('/').pop();
+                return `<img src="${SUPABASE_URL}/storage/v1/object/public/question_images/${filename}" class="max-w-full my-4 border p-2 rounded shadow-sm mx-auto">`;
+            });
+
+            fullHtml += `
+              <div class="mb-12" id="${chunk.id}">
+                  <div class="inline-block ${badgeColor} px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest mb-6 border shadow-sm">
+                      ${chunk.Course} | ${chunk.ChapterTitle}
+                  </div>
+                  
+                  <div class="prose prose-lg max-w-none text-gray-800">
+                      ${contentHTML}
+                  </div>
+              </div>
+              <hr class="my-10 border-gray-200 border-dashed">
+            `;
+          });
+
+          // Add completion footer
+          fullHtml += `
+            <div class="text-center py-10 bg-gray-50 rounded-xl border border-gray-100">
+              <i class="fas fa-check-circle text-6xl text-green-500 mb-4 shadow-sm rounded-full bg-white"></i>
+              <h3 class="text-2xl font-extrabold text-deepOcean">Theory Module Complete</h3>
+              <p class="text-gray-500 mt-2 font-medium">You have successfully finished the reading assignment.<br>You may now close this window and proceed to the DPQ.</p>
+              <button onclick="window.location.href='/dashboard.html'" class="mt-6 bg-deepOcean hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-lg shadow-md transition transform hover:-translate-y-1">
+                Return to Dashboard
+              </button>
+            </div>
+          `;
+
+          // 4. Inject and Render MathJax
+          document.getElementById('readerContent').innerHTML = fullHtml;
+          if (window.MathJax) {
+            MathJax.typesetPromise().catch(err => console.log('MathJax Error:', err));
+          }
+          
+        } else {
+          document.getElementById('readerContent').innerHTML = `
+            <div class='text-gray-500 font-bold text-center py-10'>
+              <i class="fas fa-folder-open text-5xl mb-4 text-gray-300"></i><br>
+              No theory content found for <b>${fetchId}</b>.<br>
+              Please check your database entries.
+            </div>`;
+        }
+      } catch (err) {
+        document.getElementById('readerContent').innerHTML = `
+          <div class='text-red-500 font-bold text-center py-10'>
+            <i class="fas fa-server text-4xl mb-3"></i><br>
+            Database Error: ${err.message}
+          </div>`;
+      }
+    }
+
+    // Fire the engine on load
+    loadTheoryModule();
+  </script>
+</body>
+</html>

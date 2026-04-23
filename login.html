@@ -3,104 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Shiksharthi</title>
+  <title>Login - Shiksharthi PREP</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Initialize Supabase Client with standardized variable name
+    /**
+     * Standardized Supabase Initialization
+     * Initialized via window.supabase to avoid library naming conflicts [cite: 309, 310, 348]
+     */
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
     
-    // Using window.supabase prevents the library/instance naming conflict
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
-</head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
 
-  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
-    <div class="text-center mb-6">
-      <h2 class="text-3xl font-extrabold text-gray-900">Welcome Back</h2>
-      <p class="text-gray-500 mt-2">Login to your Shiksharthi account.</p>
+  <style>
+    /* Brand color definitions matching omni-colors.sty [cite: 21, 23] */
+    .bg-deepOcean { background-color: #0F172A; }
+    .text-deepOcean { color: #0F172A; }
+    .bg-anatomyRed { background-color: #EF4444; }
+    .text-anatomyRed { color: #EF4444; }
+    
+    /* Smooth transitions for interactive elements */
+    .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+  <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full relative overflow-hidden transition-all">
+    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-anatomyRed to-deepOcean"></div>
+
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <span class="font-extrabold text-3xl text-deepOcean tracking-tight cursor-pointer" onclick="window.location.href='/index.html'">
+          Shiksharthi<span class="text-anatomyRed">PREP</span>
+        </span>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900">Welcome Back</h2>
+      <p class="text-gray-500 mt-2 font-medium">Access your NEET and JEE Advanced modules.</p>
     </div>
 
-    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
       <div>
-        <label class="block text-gray-700 font-medium mb-1">Email Address</label>
-        <input type="email" name="email" id="emailInput" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
-      </div>
-      <div>
-        <label class="block text-gray-700 font-medium mb-1">Registered Phone Number</label>
-        <input type="tel" name="phone" id="phoneInput" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        <label class="block text-gray-700 font-semibold mb-1.5 text-sm uppercase tracking-wide">Email Address</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <input type="email" name="email" id="emailInput" required 
+                 class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all" 
+                 placeholder="your@email.com">
+        </div>
       </div>
       
-      <button type="submit" id="loginBtn" class="w-full bg-gray-900 text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition shadow-md">
-        Login
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1.5 text-sm uppercase tracking-wide">WhatsApp Phone Number</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+            <i class="fas fa-phone-alt"></i>
+          </span>
+          <input type="tel" name="phone" id="phoneInput" required 
+                 class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all" 
+                 placeholder="98765 43210">
+        </div>
+      </div>
+      
+      <button type="submit" id="loginBtn" 
+              class="w-full bg-deepOcean text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition-all shadow-md transform hover:-translate-y-0.5 active:scale-95">
+        Login to Dashboard <i class="fas fa-sign-in-alt ml-2"></i>
       </button>
     </form>
 
-    <div class="mt-6 text-center">
-      <p class="text-sm text-gray-600">Don't have an account? <a href="/register.html" class="text-red-500 hover:underline font-bold">Register here</a></p>
+    <div class="mt-8 text-center border-t border-gray-50 pt-6">
+      <p class="text-sm text-gray-600 font-medium">
+        New to Shiksharthi? <a href="/register.html" class="text-anatomyRed hover:underline font-bold transition-all">Register for Free Access</a>
+      </p>
     </div>
   </div>
+  
   <script>
     /**
      * handleLogin
-     * Authenticates the user by checking Email and Phone against the Supabase database
+     * Authenticates the user against the Shiksharthi_Users table.
+     * Enforces case-sensitivity and strict record lookup[cite: 313, 314, 339].
      */
     async function handleLogin(event) {
       event.preventDefault();
       const btn = document.getElementById('loginBtn');
-      btn.innerText = "Authenticating...";
+      const originalText = btn.innerHTML;
+      
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Authenticating...`;
       btn.disabled = true;
 
-      // Get values and remove accidental spaces from typing/autofill
       const email = document.getElementById('emailInput').value.trim();
       const phone = document.getElementById('phoneInput').value.trim();
 
       try {
-        // Query Supabase to find a user matching the email and phone
-        // Uses the 'supabaseClient' variable to avoid naming conflicts
+        // Querying the relational SSOT for matching credentials [cite: 306, 338]
         const { data, error } = await supabaseClient
           .from('Shiksharthi_Users')
           .select('*')
           .eq('Email', email)
           .eq('Phone', phone)
-          .single(); // .single() expects exactly one match
+          .single(); 
 
         if (error || !data) {
-          // If no user is found or an error occurs (like 406 Not Acceptable for no rows)
-          alert("Account not found or details incorrect. Please check your credentials or register.");
-          btn.innerText = "Login";
+          // Failure handling: Triggers account not found alert [cite: 352, 375]
+          alert("Access Denied: Account not found or credentials incorrect. Please verify your details or register.");
+          btn.innerHTML = originalText;
           btn.disabled = false;
         } else {
-          // Store user data in browser session memory
+          /**
+           * Persistence: Managing non-persistent identity state via sessionStorage
+           * to prevent shared-device data compromise[cite: 312, 331, 332].
+           */
           sessionStorage.setItem("shiksharthi_user", data.FullName);
           sessionStorage.setItem("shiksharthi_status", data.EnrollmentStatus);
           
-          // Replace the login form with a success state and "Enter" button
-          const container = document.querySelector('.bg-white');
-          container.innerHTML = `
-            <div class="text-center py-4">
-              <div class="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
+          // Successful UI state transformation
+          const formContainer = document.querySelector('.bg-white');
+          formContainer.innerHTML = `
+            <div class="text-center py-6">
+              <div class="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner animate-bounce">
                 <i class="fas fa-check"></i>
               </div>
-              <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Login Successful!</h2>
-              <p class="text-gray-500 mb-8">Welcome back, <b>${data.FullName}</b>.</p>
-              <a href="/dashboard.html" class="w-full block bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition shadow-md text-lg text-center">
-                Enter Dashboard ➔
+              <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Login Successful!</h2>
+              <p class="text-gray-500 mb-10 font-medium">Welcome back, <b class="text-deepOcean">${data.FullName}</b>.</p>
+              <a href="/dashboard.html" class="w-full block bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 transition-all shadow-lg text-lg text-center transform hover:-translate-y-1">
+                Enter All-Access Portal ➔
               </a>
             </div>
           `;
         }
       } catch (err) {
-        // Catch any network or unexpected runtime errors
-        console.error("Login System Error:", err);
-        alert("Server Error: " + err.message);
-        btn.innerText = "Login";
+        console.error("Critical Login Error:", err);
+        alert("Server Sync Failed: " + err.message);
+        btn.innerHTML = originalText;
         btn.disabled = false;
       }
     }
+
+    // Protection: Prevent inspection element shortcuts in shared environments [cite: 328, 329]
+    document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
 </html>

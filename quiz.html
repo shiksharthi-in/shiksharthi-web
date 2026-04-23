@@ -9,59 +9,12 @@
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Standardized Supabase Initialization
+    // V11.0 Standardized Supabase Initialization
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 
-  <script>
-    // 1. SIUNITX PRE-PROCESSOR
-    document.addEventListener("DOMContentLoaded", function() {
-      const walkDOM = function(node) {
-        if (node.nodeType === 3) { 
-          let text = node.nodeValue;
-          const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
-          if (siRegex.test(text)) {
-            node.nodeValue = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}\\}");
-          }
-        } else if (node.nodeType === 1 && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") {
-          for (let i = 0; i < node.childNodes.length; i++) {
-            walkDOM(node.childNodes[i]);
-          }
-        }
-      };
-      walkDOM(document.body);
-    });
-
-    // 2. MATHJAX CONFIGURATION
-    window.MathJax = {
-      loader: {load: ['[tex]/mhchem']}, 
-      tex: {
-        packages: {'[+]': ['mhchem']},  
-        inlineMath: [['$', '$'], ['\\(', '\\)']], 
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        macros: {
-          SI: ["{#1}\\,\\mathrm{#2}", 2],
-          num: ["{#1}", 1],
-          farad: "F", F: "F", electronvolt: "eV", eV: "eV", henry: "H", H: "H",
-          weber: "Wb", Wb: "Wb", tesla: "T", T: "T", coulomb: "C", C: "C",
-          volt: "V", V: "V", ampere: "A", A: "A", ohm: "\\Omega",
-          joule: "J", J: "J", newton: "N", N: "N", watt: "W", W: "W",
-          pascal: "Pa", Pa: "Pa", hertz: "Hz", Hz: "Hz", kelvin: "K", K: "K",
-          celsius: "^\\circ\\mathrm{C}", degree: "^\\circ", 
-          kg: "kg", kilogram: "kg", m: "m", meter: "m", s: "s", second: "s",
-          g: "g", gram: "g", mol: "mol", mole: "mol", liter: "L", L: "L",
-          ml: "mL", mL: "mL", cm: "cm", mm: "mm", nm: "nm", angstrom: "\\text{\\AA}",
-          mmHg: "mmHg", atm: "atm", tera: "T", giga: "G", mega: "M", kilo: "k",
-          centi: "c", milli: "m", micro: "\\mu", nano: "n", pico: "p",
-          percent: "\\%", hour: "\\text{ hour}", day: "\\text{ day}"
-        }
-      },
-      startup: { typeset: true } 
-    };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     /* Disable text selection to maintain exam integrity */
     body { 
@@ -191,10 +144,66 @@
       border-color: #dee2e6; 
     }
   </style>
+  <script>
+    // 1. SIUNITX PRE-PROCESSOR
+    document.addEventListener("DOMContentLoaded", function() {
+      const walkDOM = function(node) {
+        if (node.nodeType === 3) { 
+          let text = node.nodeValue;
+          const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
+          if (siRegex.test(text)) {
+            node.nodeValue = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}\\}");
+          }
+        } else if (node.nodeType === 1 && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") {
+          for (let i = 0; i < node.childNodes.length; i++) {
+            walkDOM(node.childNodes[i]);
+          }
+        }
+      };
+      walkDOM(document.body);
+    });
+
+    // 2. MATHJAX CONFIGURATION
+    window.MathJax = {
+      loader: {load: ['[tex]/mhchem']}, 
+      tex: {
+        packages: {'[+]': ['mhchem']},  
+        inlineMath: [['$', '$'], ['\\(', '\\)']], 
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        macros: {
+          SI: ["{#1}\\,\\mathrm{#2}", 2],
+          num: ["{#1}", 1],
+          farad: "F", F: "F", electronvolt: "eV", eV: "eV", henry: "H", H: "H",
+          weber: "Wb", Wb: "Wb", tesla: "T", T: "T", coulomb: "C", C: "C",
+          volt: "V", V: "V", ampere: "A", A: "A", ohm: "\\Omega",
+          joule: "J", J: "J", newton: "N", N: "N", watt: "W", W: "W",
+          pascal: "Pa", Pa: "Pa", hertz: "Hz", Hz: "Hz", kelvin: "K", K: "K",
+          celsius: "^\\circ\\mathrm{C}", degree: "^\\circ", 
+          kg: "kg", kilogram: "kg", m: "m", meter: "m", s: "s", second: "s",
+          g: "g", gram: "g", mol: "mol", mole: "mol", liter: "L", L: "L",
+          ml: "mL", mL: "mL", cm: "cm", mm: "mm", nm: "nm", angstrom: "\\text{\\AA}",
+          mmHg: "mmHg", atm: "atm", tera: "T", giga: "G", mega: "M", kilo: "k",
+          centi: "c", milli: "m", micro: "\\mu", nano: "n", pico: "p",
+          percent: "\\%", hour: "\\text{ hour}", day: "\\text{ day}",
+          
+          /* --- NEW MACROS TO FIX LATEX ENGINE ERRORS --- */
+          kilom: "\\mathrm{km}",
+          centim: "\\mathrm{cm}",
+          rad: "\\mathrm{rad}",
+          per: "/",
+          squared: "^2",
+          cubed: "^3"
+        }
+      },
+      startup: { typeset: true } 
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body class="bg-gray-100 font-sans h-screen flex flex-col overflow-hidden noselect" oncontextmenu="return false;">
 	
-	<div class="bg-ntaBlue text-white px-6 py-3 flex justify-between items-center shadow-md z-20">
+  <div class="bg-ntaBlue text-white px-6 py-3 flex justify-between items-center shadow-md z-20">
     <h1 class="text-lg font-bold tracking-wide" id="examTitle">NEET Mock Examination</h1>
     <div class="text-lg font-bold bg-white text-red-600 px-4 py-1 rounded shadow-inner" id="timerBox">
       Time Left: <span id="timer">--:--:--</span>
@@ -203,10 +212,9 @@
 
   <div id="loadingScreen" class="absolute inset-0 top-[60px] bg-white z-50 flex flex-col items-center justify-center">
     <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-ntaBlue mb-4"></div>
-    <h2 class="text-2xl font-bold text-gray-800">Initializing CBT Environment V2...</h2>
-    <p class="text-gray-500 mt-2">Fetching module data securely from database.</p>
+    <h2 class="text-2xl font-bold text-gray-800">Initializing CBT Environment V11.0...</h2>
+    <p class="text-gray-500 mt-2">Fetching module data securely from Supabase.</p>
   </div>
-
   <div id="instructionScreen" class="hidden absolute inset-0 top-[60px] bg-white z-40 overflow-y-auto p-6 md:p-10">
     <div class="max-w-4xl mx-auto bg-white border border-gray-200 rounded-xl shadow-lg p-8">
       <h2 class="text-2xl font-extrabold text-red-600 border-b-2 border-gray-100 pb-3 mb-6">Please read the instructions carefully</h2>
@@ -272,7 +280,6 @@
           <span class="bg-ntaBlue text-white px-3 py-1 rounded text-sm font-bold shadow-sm uppercase tracking-wider" id="qTypeLabel">Multiple Choice</span>
           <span class="text-ntaBlue font-extrabold text-lg">Question <span id="qNumberDisplay">1</span></span>
         </div>
-
         <div class="flex-1 overflow-y-auto p-6 md:p-8 text-gray-800 text-lg leading-relaxed">
           <div id="qText" class="mb-6 font-medium"></div>
 
@@ -370,133 +377,132 @@
     let qStatus = {}; 
     let studentAnswers = {}; 
 
-    // Security: Disable Right-Click context menu
+    // Security: Disable Right-Click context menu to prevent unauthorized scraping
     document.addEventListener('contextmenu', event => event.preventDefault());
 
     /**
-     * cleanLatexText
-     * Preserving your 100% original logic for TikZ stripping, math lockboxing, 
+     * cleanLatexText (The MathJax Lockbox Engine)
+     * Preserving your original logic for TikZ stripping, math lockboxing, 
      * and NTA-style Assertion-Reason/Tabular formatting.
      */
-function cleanLatexText(text) {
-  if (!text) return "";
-  text = String(text);
-  
-  // 1. Force-strip leftover TikZ/centerfig artifacts
-  text = text.replace(/\\begin\{centerfig\}[\s\S]*?\\end\{centerfig\}/g, "");
-  text = text.replace(/%<\*Fig.*?%<\/Fig.*?>/g, "");
-  
-  // 2. PRE-PROCESS SCIENTIFIC NOTATION (e.g., 1.5e5 -> 1.5 \times 10^{5})
-  // This must happen before lockboxing so the resulting math is protected.
-  const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
-  text = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}}");
-
-  // 3. MATH "LOCKBOX" LOGIC: Protects LaTeX from standard regex replacements
-  let mathBlocks = [];
-  text = text.replace(/\$([^$]+)\$/g, function(match, inner) {
-      mathBlocks.push(inner);
-      return "MATH_BLOCK_" + (mathBlocks.length - 1) + "_";
-  });
-  
-  let parenBlocks = [];
-  text = text.replace(/\\\([\s\S]*?\\\)/g, function(match) {
-      parenBlocks.push(match);
-      return "PAREN_BLOCK_" + (parenBlocks.length - 1) + "_";
-  });
-
-  // 4. LOOSE MATH FIXES: Catch exponents, roots, and constants missed by $ delimiters
-  text = text.replace(/(\d+)\^\{?([+-]?\d+)\}?/g, "\\($1^{$2}\\)");
-  text = text.replace(/\\sqrt\{((?:[^{}]|\{[^{}]*\})+)\}/g, "\\(\\sqrt{$1}\\)");
-  text = text.replace(/\\varepsilon_0/g, "\\(\\varepsilon_0\\)");
-  text = text.replace(/\\mu_0/g, "\\(\\mu_0\\)"); 
-
-  // 5. STANDARD TEXT FORMATTING
-  text = text.replace(/\\textbf\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<b>$1</b>");
-  text = text.replace(/\\textit\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<i>$1</i>"); 
-  text = text.replace(/\\underline\{\\hspace\{[^}]+\}\}/g, "________");
-  text = text.replace(/\\underline\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<u>$1</u>");
-  text = text.replace(/\\%/g, "%"); 
-  text = text.replace(/\\&/g, "&amp;"); 
-  text = text.replace(/\\AA/g, "Å"); 
-  text = text.replace(/\\_/g, "_"); 
-  text = text.replace(/\\percent\b/g, "\\%");
-  text = text.replace(/\\hour\b/g, "hour");
-  text = text.replace(/\\day\b/g, "day");
-  
-  // 6. Difficulty Badge Converter
-  text = text.replace(/\\difficulty\{([^}]+)\}/g, "<span class='inline-block bg-white border border-gray-300 text-gray-700 text-xs font-extrabold px-2 py-1 rounded shadow-sm mb-3 uppercase tracking-wider'>Difficulty: $1</span><br/>");
-  
-  // 7. Assertion-Reason formatting logic
-  text = text.replace(/\\begin\{assertionreason\}/g, "<div class='bg-gray-50 border-l-4 border-ntaBlue p-4 my-3 rounded-r-lg shadow-sm text-gray-800'>");
-  text = text.replace(/\\end\{assertionreason\}/g, "</div>");
-  
-  if (text.includes("\\ARquestion{")) {
-    let startIndex = text.indexOf("\\ARquestion{");
-    let preText = text.substring(0, startIndex);
-    let content = text.substring(startIndex + 12); 
-    
-    let midIndex = content.indexOf("}{");
-    let lastIndex = content.lastIndexOf("}");
-    
-    if (midIndex !== -1 && lastIndex !== -1) {
-      let assertion = content.substring(0, midIndex);
-      let reason = content.substring(midIndex + 2, lastIndex);
-      let postText = content.substring(lastIndex + 1);
-      let formattedAR = "<div class='mb-3'><strong class='text-deepOcean'>Assertion (A):</strong> " + assertion + "</div><div><strong class='text-deepOcean'>Reason (R):</strong> " + reason + "</div>";
-      text = preText + formattedAR + postText;
-    }
-  }
-
-  // 8. Tabular environment parser for NTA tables
-  text = text.replace(/\\begin\{tabular\}\{([^{}]|\{[^{}]*\})*\}([\s\S]*?)\\end\{tabular\}/g, function(match, colDef, innerContent) {
-      let cleanedContent = innerContent.replace(/\\rowcolor\{[^}]+\}/g, "");
-      cleanedContent = cleanedContent.replace(/\\hline|\\toprule|\\midrule|\\bottomrule/g, "");
-      let rows = cleanedContent.split(/\\\\/);
-      let htmlTable = "<div class='overflow-x-auto my-4'><table class='w-full max-w-lg mx-auto border-collapse border border-gray-300 shadow-sm text-left bg-white'><tbody class='divide-y divide-gray-200'>";
+    function cleanLatexText(text) {
+      if (!text) return "";
+      text = String(text);
       
-      let isFirstRow = true;
-      for (let i = 0; i < rows.length; i++) {
-          let row = rows[i].trim();
-          if (!row) continue;
-          
-          let cols = row.split('&');
-          htmlTable += "<tr class='" + (isFirstRow ? "bg-blue-50 text-ntaBlue font-bold" : "hover:bg-gray-50") + "'>";
-          for (let j = 0; j < cols.length; j++) {
-              let cellTag = isFirstRow ? "th" : "td";
-              htmlTable += `<${cellTag} class='p-3 border-x border-gray-200'>` + cols[j].trim() + `</${cellTag}>`;
-          }
-          htmlTable += "</tr>";
-          isFirstRow = false; 
+      // 1. Force-strip leftover TikZ/centerfig artifacts (since SVGs are used instead)
+      text = text.replace(/\\begin\{centerfig\}[\s\S]*?\\end\{centerfig\}/g, "");
+      text = text.replace(/%<\*Fig.*?%<\/Fig.*?>/g, "");
+      
+      // 2. PRE-PROCESS SCIENTIFIC NOTATION (e.g., 1.5e5 -> 1.5 \times 10^{5})
+      // This must happen before lockboxing so the resulting math is protected.
+      const siRegex = /\\(SI|num)\{([\d.]+)\s*e\s*([+-]?)\s*(\d+)\}/g;
+      text = text.replace(siRegex, "\\$1{$2 \\times 10^{$3$4}}");
+
+      // 3. MATH "LOCKBOX" LOGIC: Protects LaTeX from standard regex replacements
+      let mathBlocks = [];
+      text = text.replace(/\$([^$]+)\$/g, function(match, inner) {
+          mathBlocks.push(inner);
+          return "MATH_BLOCK_" + (mathBlocks.length - 1) + "_";
+      });
+      
+      let parenBlocks = [];
+      text = text.replace(/\\\([\s\S]*?\\\)/g, function(match) {
+          parenBlocks.push(match);
+          return "PAREN_BLOCK_" + (parenBlocks.length - 1) + "_";
+      });
+
+      // 4. LOOSE MATH FIXES: Catch exponents, roots, and constants missed by $ delimiters
+      text = text.replace(/(\d+)\^\{?([+-]?\d+)\}?/g, "\\($1^{$2}\\)");
+      text = text.replace(/\\sqrt\{((?:[^{}]|\{[^{}]*\})+)\}/g, "\\(\\sqrt{$1}\\)");
+      text = text.replace(/\\varepsilon_0/g, "\\(\\varepsilon_0\\)");
+      text = text.replace(/\\mu_0/g, "\\(\\mu_0\\)"); 
+
+      // 5. STANDARD TEXT FORMATTING
+      text = text.replace(/\\textbf\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<b>$1</b>");
+      text = text.replace(/\\textit\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<i>$1</i>"); 
+      text = text.replace(/\\underline\{\\hspace\{[^}]+\}\}/g, "________");
+      text = text.replace(/\\underline\{((?:[^{}]|\{[^{}]*\})+)\}/g, "<u>$1</u>");
+      text = text.replace(/\\%/g, "%"); 
+      text = text.replace(/\\&/g, "&amp;"); 
+      text = text.replace(/\\AA/g, "Å"); 
+      text = text.replace(/\\_/g, "_"); 
+      text = text.replace(/\\percent\b/g, "\\%");
+      text = text.replace(/\\hour\b/g, "hour");
+      text = text.replace(/\\day\b/g, "day");
+      
+      // 6. Difficulty Badge Converter
+      text = text.replace(/\\difficulty\{([^}]+)\}/g, "<span class='inline-block bg-white border border-gray-300 text-gray-700 text-xs font-extrabold px-2 py-1 rounded shadow-sm mb-3 uppercase tracking-wider'>Difficulty: $1</span><br/>");
+      
+      // 7. Assertion-Reason formatting logic
+      text = text.replace(/\\begin\{assertionreason\}/g, "<div class='bg-gray-50 border-l-4 border-ntaBlue p-4 my-3 rounded-r-lg shadow-sm text-gray-800'>");
+      text = text.replace(/\\end\{assertionreason\}/g, "</div>");
+      
+      if (text.includes("\\ARquestion{")) {
+        let startIndex = text.indexOf("\\ARquestion{");
+        let preText = text.substring(0, startIndex);
+        let content = text.substring(startIndex + 12); 
+        
+        let midIndex = content.indexOf("}{");
+        let lastIndex = content.lastIndexOf("}");
+        
+        if (midIndex !== -1 && lastIndex !== -1) {
+          let assertion = content.substring(0, midIndex);
+          let reason = content.substring(midIndex + 2, lastIndex);
+          let postText = content.substring(lastIndex + 1);
+          let formattedAR = "<div class='mb-3'><strong class='text-deepOcean'>Assertion (A):</strong> " + assertion + "</div><div><strong class='text-deepOcean'>Reason (R):</strong> " + reason + "</div>";
+          text = preText + formattedAR + postText;
+        }
       }
-      htmlTable += "</tbody></table></div>";
-      return htmlTable;
-  });
 
-  text = text.replace(/\\begin\{center\}/g, "");
-  text = text.replace(/\\end\{center\}/g, "");
-  
-  // 9. RESTORE MATH BLOCKS: Re-inject the protected LaTeX
-  // Ensure \ce and \SI are wrapped in math delimiters for MathJax
-  text = text.replace(/\\ce\{((?:[^{}]|\{[^{}]*\})+)\}/g, "\\(\\ce{$1}\\)");
-  text = text.replace(/\\SI\{((?:[^{}]|\{[^{}]*\})*)\}\{((?:[^{}]|\{[^{}]*\})*)\}/g, "\\(\\SI{$1}{$2}\\)");
-  
-  text = text.replace(/PAREN_BLOCK_(\d+)_/g, function(match, index) {
-      return parenBlocks[index];
-  });
-  text = text.replace(/MATH_BLOCK_(\d+)_/g, function(match, index) {
-      return "\\(" + mathBlocks[index] + "\\)";
-  });
+      // 8. Tabular environment parser for NTA tables
+      text = text.replace(/\\begin\{tabular\}\{([^{}]|\{[^{}]*\})*\}([\s\S]*?)\\end\{tabular\}/g, function(match, colDef, innerContent) {
+          let cleanedContent = innerContent.replace(/\\rowcolor\{[^}]+\}/g, "");
+          cleanedContent = cleanedContent.replace(/\\hline|\\toprule|\\midrule|\\bottomrule/g, "");
+          let rows = cleanedContent.split(/\\\\/);
+          let htmlTable = "<div class='overflow-x-auto my-4'><table class='w-full max-w-lg mx-auto border-collapse border border-gray-300 shadow-sm text-left bg-white'><tbody class='divide-y divide-gray-200'>";
+          
+          let isFirstRow = true;
+          for (let i = 0; i < rows.length; i++) {
+              let row = rows[i].trim();
+              if (!row) continue;
+              
+              let cols = row.split('&');
+              htmlTable += "<tr class='" + (isFirstRow ? "bg-blue-50 text-ntaBlue font-bold" : "hover:bg-gray-50") + "'>";
+              for (let j = 0; j < cols.length; j++) {
+                  let cellTag = isFirstRow ? "th" : "td";
+                  htmlTable += `<${cellTag} class='p-3 border-x border-gray-200'>` + cols[j].trim() + `</${cellTag}>`;
+              }
+              htmlTable += "</tr>";
+              isFirstRow = false; 
+          }
+          htmlTable += "</tbody></table></div>";
+          return htmlTable;
+      });
 
-  // 10. SI UNIT MACRO TRANSLATIONS: Clean up units MathJax doesn't support natively
-  // This executes after lockboxes are opened to guarantee all instances are caught.
-  text = text.replace(/\\kilo\\gram/g, "kg");
-  text = text.replace(/\\meter\\per\\second/g, "m/s");
-  text = text.replace(/\\meter/g, "m");
-  text = text.replace(/\\second/g, "s");
-  
-  return text;
-}
+      text = text.replace(/\\begin\{center\}/g, "");
+      text = text.replace(/\\end\{center\}/g, "");
+      
+      // 9. RESTORE MATH BLOCKS: Re-inject the protected LaTeX
+      // Ensure \ce and \SI are wrapped in math delimiters for MathJax
+      text = text.replace(/\\ce\{((?:[^{}]|\{[^{}]*\})+)\}/g, "\\(\\ce{$1}\\)");
+      text = text.replace(/\\SI\{((?:[^{}]|\{[^{}]*\})*)\}\{((?:[^{}]|\{[^{}]*\})*)\}/g, "\\(\\SI{$1}{$2}\\)");
+      
+      text = text.replace(/PAREN_BLOCK_(\d+)_/g, function(match, index) {
+          return parenBlocks[index];
+      });
+      text = text.replace(/MATH_BLOCK_(\d+)_/g, function(match, index) {
+          return "\\(" + mathBlocks[index] + "\\)";
+      });
 
+      // 10. SI UNIT MACRO TRANSLATIONS: Clean up units MathJax doesn't support natively
+      // This executes after lockboxes are opened to guarantee all instances are caught.
+      text = text.replace(/\\kilo\\gram/g, "kg");
+      text = text.replace(/\\meter\\per\\second/g, "m/s");
+      text = text.replace(/\\meter/g, "m");
+      text = text.replace(/\\second/g, "s");
+      
+      return text;
+    }
     // Diagnostic UI for Database Failures
     function showDiagnosticError(errorMessage) {
       document.getElementById('loadingScreen').innerHTML = `
@@ -512,7 +518,7 @@ function cleanLatexText(text) {
       `;
     }
     
-    // INITIAL LOAD: Replacement for old google.script.run
+    // INITIAL LOAD: Supabase Database Fetch
     document.addEventListener("DOMContentLoaded", async function() {
       if (!quizId || quizId.trim() === "") {
         showDiagnosticError("No Quiz ID found in URL. Launch from Dashboard.");
@@ -520,16 +526,17 @@ function cleanLatexText(text) {
       }
 
       try {
-        // Fetch Questions from Supabase using standardized variable
+        // Fetch Questions from Supabase using standardized client
         const { data, error } = await supabaseClient
           .from('Shiksharthi_Question_Bank')
           .select('*')
-          .eq('QuizID', quizId);
+          .eq('QuizID', quizId)
+          .order('QuestionNum', { ascending: true }); // V11.0: Ensure correct order
 
         if (error) throw error;
 
         if (data && data.length > 0) {
-          // Map database columns to local objects
+          // Map database columns to local CBT objects
           questions = data.map(row => ({
             qNum: row.QuestionNum,
             type: row.Type || "mcq",
@@ -563,6 +570,7 @@ function cleanLatexText(text) {
         showDiagnosticError("Fetch Failure: " + err.message);
       }
     });
+
     // 1. EXAM INITIALIZATION
     function toggleProceed() {
       document.getElementById('proceedBtn').disabled = !document.getElementById('declarationCheck').checked;
@@ -578,7 +586,6 @@ function cleanLatexText(text) {
       jumpToQuestion(0);
       startTimer(12000); // 200 minutes (12000 seconds)
     }
-
     // 2. PALETTE & SECTION MANAGEMENT
     function buildPalette() {
       const grid = document.getElementById('paletteGrid');
@@ -656,12 +663,13 @@ function cleanLatexText(text) {
       let typeLabel = document.getElementById('qTypeLabel');
       if (typeLabel) typeLabel.innerText = q.type ? q.type : "Multiple Choice";
 
-      // Handle Figure Images
+      // Handle Figure Images (V11.0: Routed to Supabase Storage Bucket)
       let imgContainer = document.getElementById('qImageContainer');
       let imgTag = document.getElementById('qImage');
       if (imgContainer && imgTag) {
         if (q.image && q.image.trim() !== "") {
-          imgTag.src = q.image.replace("/uc?export=view&id=", "/thumbnail?id=") + "&sz=w800";
+          // Pointing directly to your public Supabase bucket
+          imgTag.src = `${SUPABASE_URL}/storage/v1/object/public/question_images/${q.image}`;
           imgContainer.classList.remove('hidden');
         } else {
           imgContainer.classList.add('hidden');
@@ -723,7 +731,6 @@ function cleanLatexText(text) {
         jumpToQuestion(currentIndex + 1);
       }
     }
-
     // 4. TIMER & SUBMISSION LOGIC
     let timerInterval;
     function startTimer(seconds) {
@@ -747,6 +754,9 @@ function cleanLatexText(text) {
 
       clearInterval(timerInterval);
       let score = 0, correctCount = 0, incorrectCount = 0, unattemptedCount = 0, solutionsHtml = "";
+      
+      // V11.0: Array to hold Omni-Audit error logs
+      let errorLogs = [];
 
       for (let i = 0; i < questions.length; i++) {
         let q = questions[i];
@@ -766,6 +776,16 @@ function cleanLatexText(text) {
           incorrectCount++; score -= 1;
           statusBadge = `<span class="bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-bold uppercase">Incorrect (-1)</span>`;
           borderClass = "border-red-400 shadow-[0_0_10px_rgba(248,113,113,0.2)]";
+          
+          // V11.0: Capture incorrect data for the Error Log
+          errorLogs.push({
+            Email: sessionStorage.getItem("shiksharthi_email") || "Unknown",
+            QuizID: quizId,
+            QuestionNum: q.qNum || (i + 1),
+            StudentAnswer: studentAns,
+            CorrectAnswer: actualAns,
+            SubjectTopic: q.type // Captures the Domain/Type for analytics
+          });
         }
 
         // Advanced solution formatting
@@ -779,6 +799,12 @@ function cleanLatexText(text) {
             .replace(/\\end\{tasks\}/g, '</ul>')
             .replace(/\\item/g, '<li class="pl-2">')
             .replace(/\\task/g, '<li class="pl-2 border-l-2 border-blue-400 ml-2">');
+            
+        // Check if there is a solution image to render from Supabase
+        let solutionImageHtml = "";
+        if (q.solutionImage && q.solutionImage.trim() !== "") {
+            solutionImageHtml = `<img src="${SUPABASE_URL}/storage/v1/object/public/question_images/${q.solutionImage}" class="max-w-full mt-4 border p-2 rounded shadow-sm">`;
+        }
 
         solutionsHtml += `
           <div class="bg-white p-6 rounded-xl border-2 ${borderClass} relative">
@@ -798,6 +824,7 @@ function cleanLatexText(text) {
             <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r mt-4">
               <span class="font-bold text-blue-800 text-sm uppercase tracking-wide block mb-1">Official Solution (Correct Answer: ${actualAns})</span>
               <span class="text-gray-700">${cleanLatexText(cleanSolution)}</span>
+              ${solutionImageHtml}
             </div>
           </div>
         `;
@@ -815,37 +842,209 @@ function cleanLatexText(text) {
 
       if (window.MathJax) MathJax.typesetPromise().catch(err => console.log(err));
       
-      // Critical Call: Push scores to database
-      saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount);
+      // Critical Call: Push scores and error logs to Supabase [cite: 1762, 1763, 1764]
+      saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount, errorLogs);
     }
 
     /**
      * saveAttemptToSupabase
-     * Replaces the old Google Apps Script server function
+     * V11.0 Upgrade: Writes to both Attempts Table and Error Log Table
      */
-    async function saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount) {
-      let studentName = sessionStorage.getItem("shiksharthi_user") || "Unknown Student";
+    async function saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount, errorLogs) {
+      const userEmail = sessionStorage.getItem("shiksharthi_email");
       
+      if (!userEmail) {
+        console.warn("No active user email session found. Data will not be logged.");
+        return;
+      }
+
       try {
-        const { data, error } = await supabaseClient
+        // 1. Save the overarching Attempt Data
+        const { error: attemptError } = await supabaseClient
           .from('Shiksharthi_Quiz_Attempts')
           .insert([{
-  "Timestamp": new Date().toISOString(),
-  "Username": studentName,     // FIXED
-  "QuizID": quizId,            // FIXED
-  "Score": score,              // FIXED
-  "Correct": correctCount,
-  "Incorrect": incorrectCount,
-  "Unattempted": unattemptedCount
-}]);
+            "UserEmail": userEmail,
+            "QuizID": quizId,
+            "Score": score,
+            "Correct": correctCount,
+            "Incorrect": incorrectCount,
+            "Unattempted": unattemptedCount
+          }]);
 
-        if (error) {
-          console.error("Supabase Save Error:", error.message);
-        } else {
-          console.log("Attempt saved successfully!");
+        if (attemptError) throw attemptError;
+        console.log("Attempt securely logged.");
+
+        // 2. Save the Omni-Audit Error Logs (if any mistakes were made)
+        if (errorLogs.length > 0) {
+          const { error: logError } = await supabaseClient
+            .from('Shiksharthi_Error_Log')
+            .insert(errorLogs);
+            
+          if (logError) throw logError;
+          console.log(`${errorLogs.length} error logs securely written for analysis.`);
         }
+
       } catch (e) {
-        console.error("Unexpected error saving attempt:", e);
+        console.error("Critical Database Sync Error during submission:", e.message);
+      }
+    }
+  </script>
+</body>
+</html>// 4. TIMER & SUBMISSION LOGIC
+    let timerInterval;
+    function startTimer(seconds) {
+      let timeRemaining = seconds;
+      timerInterval = setInterval(() => {
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          submitExam();
+        } else {
+          timeRemaining--;
+          let h = Math.floor(timeRemaining / 3600);
+          let m = Math.floor((timeRemaining % 3600) / 60);
+          let s = timeRemaining % 60;
+          document.getElementById('timer').innerText = `${h < 10 ? '0'+h : h}:${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+        }
+      }, 1000);
+    }
+
+    async function submitExam() {
+      if (!confirm("Are you sure you want to submit? You cannot change your answers after submission.")) return;
+
+      clearInterval(timerInterval);
+      let score = 0, correctCount = 0, incorrectCount = 0, unattemptedCount = 0, solutionsHtml = "";
+      
+      // V11.0: Array to hold Omni-Audit error logs
+      let errorLogs = [];
+
+      for (let i = 0; i < questions.length; i++) {
+        let q = questions[i];
+        let studentAns = studentAnswers[i];
+        let actualAns = q.answer ? q.answer.toString().trim().toUpperCase() : ""; 
+        let isCorrect = false, statusBadge = "", borderClass = "";
+
+        if (!studentAns) {
+          unattemptedCount++;
+          statusBadge = `<span class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-bold uppercase">Unattempted (0)</span>`;
+          borderClass = "border-gray-300";
+        } else if (studentAns === actualAns) {
+          correctCount++; score += 4; isCorrect = true;
+          statusBadge = `<span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-bold uppercase">Correct (+4)</span>`;
+          borderClass = "border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.2)]";
+        } else {
+          incorrectCount++; score -= 1;
+          statusBadge = `<span class="bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-bold uppercase">Incorrect (-1)</span>`;
+          borderClass = "border-red-400 shadow-[0_0_10px_rgba(248,113,113,0.2)]";
+          
+          // V11.0: Capture incorrect data for the Error Log
+          errorLogs.push({
+            Email: sessionStorage.getItem("shiksharthi_email") || "Unknown",
+            QuizID: quizId,
+            QuestionNum: q.qNum || (i + 1),
+            StudentAnswer: studentAns,
+            CorrectAnswer: actualAns,
+            SubjectTopic: q.type // Captures the Domain/Type for analytics
+          });
+        }
+
+        // Advanced solution formatting
+        let rawSolution = q.solution || "No detailed solution provided.";
+        let cleanSolution = rawSolution
+            .replace(/\\begin\{enumerate\}/g, '<ol class="list-decimal ml-6 mt-2 space-y-3">')
+            .replace(/\\end\{enumerate\}/g, '</ol>')
+            .replace(/\\begin\{itemize\}/g, '<ul class="list-disc ml-6 mt-2 space-y-3">')
+            .replace(/\\end\{itemize\}/g, '</ul>')
+            .replace(/\\begin\{tasks\}.*/g, '<ul class="list-none ml-2 mt-2 space-y-3">')
+            .replace(/\\end\{tasks\}/g, '</ul>')
+            .replace(/\\item/g, '<li class="pl-2">')
+            .replace(/\\task/g, '<li class="pl-2 border-l-2 border-blue-400 ml-2">');
+            
+        // Check if there is a solution image to render from Supabase
+        let solutionImageHtml = "";
+        if (q.solutionImage && q.solutionImage.trim() !== "") {
+            solutionImageHtml = `<img src="${SUPABASE_URL}/storage/v1/object/public/question_images/${q.solutionImage}" class="max-w-full mt-4 border p-2 rounded shadow-sm">`;
+        }
+
+        solutionsHtml += `
+          <div class="bg-white p-6 rounded-xl border-2 ${borderClass} relative">
+            <div class="flex justify-between items-start mb-4 border-b pb-2">
+              <span class="font-bold text-xl text-deepOcean">Question ${i+1}</span>
+              ${statusBadge}
+            </div>
+            <div class="text-gray-800 text-lg mb-4">${cleanLatexText(q.text)}</div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-md">
+              <div class="p-3 rounded ${studentAns === 'A' ? (isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300') : 'bg-gray-50 border-gray-200'} border"><span class="font-bold mr-2 text-gray-500">A.</span> ${cleanLatexText(q.optA)}</div>
+              <div class="p-3 rounded ${studentAns === 'B' ? (isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300') : 'bg-gray-50 border-gray-200'} border"><span class="font-bold mr-2 text-gray-500">B.</span> ${cleanLatexText(q.optB)}</div>
+              <div class="p-3 rounded ${studentAns === 'C' ? (isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300') : 'bg-gray-50 border-gray-200'} border"><span class="font-bold mr-2 text-gray-500">C.</span> ${cleanLatexText(q.optC)}</div>
+              <div class="p-3 rounded ${studentAns === 'D' ? (isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300') : 'bg-gray-50 border-gray-200'} border"><span class="font-bold mr-2 text-gray-500">D.</span> ${cleanLatexText(q.optD)}</div>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r mt-4">
+              <span class="font-bold text-blue-800 text-sm uppercase tracking-wide block mb-1">Official Solution (Correct Answer: ${actualAns})</span>
+              <span class="text-gray-700">${cleanLatexText(cleanSolution)}</span>
+              ${solutionImageHtml}
+            </div>
+          </div>
+        `;
+      }
+
+      // Display Final UI
+      document.getElementById('finalScoreDisplay').innerText = `${score} / ${questions.length * 4}`;
+      document.getElementById('res-correct').innerText = correctCount;
+      document.getElementById('res-incorrect').innerText = incorrectCount;
+      document.getElementById('res-unattempted').innerText = unattemptedCount;
+      document.getElementById('solutionsContainer').innerHTML = solutionsHtml;
+
+      document.getElementById('examInterface').classList.add('hidden');
+      document.getElementById('resultsInterface').classList.remove('hidden');
+
+      if (window.MathJax) MathJax.typesetPromise().catch(err => console.log(err));
+      
+      // Critical Call: Push scores and error logs to Supabase [cite: 1762, 1763, 1764]
+      saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount, errorLogs);
+    }
+
+    /**
+     * saveAttemptToSupabase
+     * V11.0 Upgrade: Writes to both Attempts Table and Error Log Table
+     */
+    async function saveAttemptToSupabase(score, correctCount, incorrectCount, unattemptedCount, errorLogs) {
+      const userEmail = sessionStorage.getItem("shiksharthi_email");
+      
+      if (!userEmail) {
+        console.warn("No active user email session found. Data will not be logged.");
+        return;
+      }
+
+      try {
+        // 1. Save the overarching Attempt Data
+        const { error: attemptError } = await supabaseClient
+          .from('Shiksharthi_Quiz_Attempts')
+          .insert([{
+            "UserEmail": userEmail,
+            "QuizID": quizId,
+            "Score": score,
+            "Correct": correctCount,
+            "Incorrect": incorrectCount,
+            "Unattempted": unattemptedCount
+          }]);
+
+        if (attemptError) throw attemptError;
+        console.log("Attempt securely logged.");
+
+        // 2. Save the Omni-Audit Error Logs (if any mistakes were made)
+        if (errorLogs.length > 0) {
+          const { error: logError } = await supabaseClient
+            .from('Shiksharthi_Error_Log')
+            .insert(errorLogs);
+            
+          if (logError) throw logError;
+          console.log(`${errorLogs.length} error logs securely written for analysis.`);
+        }
+
+      } catch (e) {
+        console.error("Critical Database Sync Error during submission:", e.message);
       }
     }
   </script>
