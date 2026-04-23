@@ -12,6 +12,7 @@
   <script>
     const SUPABASE_URL = 'https://xkduesktbvmqkgjtvjpi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZHVlc2t0YnZtcWtnanR2anBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NjE4ODQsImV4cCI6MjA5MjIzNzg4NH0.f97F6fcc0_Adk4JHHnGxO0zLbiic4p6ogs6xzCbzQrY';
+    // Use 'supabaseClient' consistently
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   </script>
 
@@ -42,7 +43,6 @@
 
   <div class="flex-grow flex items-center justify-center p-4 py-12">
     <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 max-w-md w-full relative overflow-hidden transition-all">
-      
       <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-anatomyRed to-deepOcean"></div>
       
       <div id="formContainer">
@@ -52,29 +52,29 @@
         </div>
         
         <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5">
-  <div>
-    <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Full Name</label>
-    <div class="relative">
-      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-        <i class="fas fa-user"></i>
-      </span>
-      <input type="text" id="fullName" required 
-             class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
-             placeholder="Enter your full name">
-    </div>
-  </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Full Name</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                <i class="fas fa-user"></i>
+              </span>
+              <input type="text" id="fullName" required 
+                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
+                     placeholder="Enter your full name">
+            </div>
+          </div>
 
-  <div>
-    <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Phone Number</label>
-    <div class="relative">
-      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-        <i class="fas fa-phone"></i>
-      </span>
-      <input type="tel" id="phone" required 
-             class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
-             placeholder="Enter your phone number">
-    </div>
-  </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Phone Number</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                <i class="fas fa-phone"></i>
+              </span>
+              <input type="tel" id="phone" required 
+                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
+                     placeholder="Enter your phone number">
+            </div>
+          </div>
 
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Email Address</label>
@@ -85,6 +85,18 @@
               <input type="email" id="email" required 
                      class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
                      placeholder="your@email.com">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Password</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                <i class="fas fa-lock"></i>
+              </span>
+              <input type="password" id="password" required 
+                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
+                     placeholder="••••••••">
             </div>
           </div>
 
@@ -105,7 +117,6 @@
                 <i class="fas fa-chevron-down"></i>
               </span>
             </div>
-            <p class="text-[10px] text-gray-400 mt-2 italic">* You will still have access to all courses in the library.</p>
           </div>
 
           <button type="submit" id="submitBtn" 
@@ -118,6 +129,7 @@
           Already have an account? <a href="/login.html" class="text-deepOcean font-extrabold hover:underline transition-all">Log In Here</a>
         </p>
       </div>
+
       <div id="successMessage" class="hidden text-center py-6">
         <div class="bg-green-100 text-green-600 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner animate-bounce">
           <i class="fas fa-check"></i>
@@ -127,85 +139,76 @@
           Your account is active. During our limited-time launch promotion, you have 
           <b class="text-anatomyRed">FREE 100% All-Access</b> to all NEET and JEE modules.
         </p>
-        
         <button onclick="window.location.href='/login.html'" 
                 class="w-full bg-anatomyRed hover:bg-red-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 text-lg">
           Log In to Start Learning <i class="fas fa-arrow-right ml-2"></i>
         </button>
       </div>
-
     </div>
   </div>
 
- <script>
+  <script>
     async function handleRegister(event) {
-        event.preventDefault();
-        
-        console.log("Starting registration process..."); // Milestone 1
+      event.preventDefault();
+      console.log("Starting registration process...");
 
-        const btn = document.getElementById('submitBtn');
-        const originalText = btn.innerHTML;
-        
-        // UI Feedback
-        btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
-        btn.disabled = true;
-        btn.classList.add('opacity-70');
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
+      btn.disabled = true;
+      btn.classList.add('opacity-70');
 
-        try {
-            // 1. Capture ALL form values (The "phone" fix)
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const phone = document.getElementById('phone').value.trim(); // MUST BE DEFINED HERE
-            const preference = document.getElementById('primaryPreference').value;
+      try {
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const phone = document.getElementById('phone').value.trim();
+        const preference = document.getElementById('primaryPreference').value;
 
-            console.log("Data captured:", { fullName, email, phone, preference }); // Milestone 2
+        console.log("Data captured:", { fullName, email, phone, preference });
 
-            // 2. Auth Sign Up
-            // Check if your client is named '_supabase' or 'supabaseClient'
-            const { data: authData, error: authError } = await _supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: { full_name: fullName }
-                }
-            });
+        // Step 1: Sign up user for Authentication
+        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { full_name: fullName }
+          }
+        });
 
-            if (authError) throw authError;
-            console.log("Auth successful, ID:", authData.user.id); // Milestone 3
+        if (authError) throw authError;
+        console.log("Auth successful, ID:", authData.user.id);
 
-            // 3. Database Profile Insert
-            const { error: dbError } = await _supabase
-                .from('Shiksharthi_Users')
-                .insert([
-                    { 
-                        id: authData.user.id,
-                        FullName: fullName,
-                        Email: email,
-                        Phone: phone,
-                        EnrollmentStatus: "Unpaid",
-                        PrimaryPreference: preference
-                    }
-                ]);
+        // Step 2: Create profile in Shiksharthi_Users table
+        const { error: dbError } = await supabaseClient
+          .from('Shiksharthi_Users')
+          .insert([
+            { 
+              id: authData.user.id,
+              FullName: fullName,
+              Email: email,
+              Phone: phone,
+              EnrollmentStatus: "Unpaid",
+              PrimaryPreference: preference
+            }
+          ]);
 
-            if (dbError) throw dbError;
-            console.log("Database insert successful!"); // Milestone 4
+        if (dbError) throw dbError;
+        console.log("Database insert successful!");
 
-            // 4. Success UI Update
-            sessionStorage.setItem("shiksharthi_preference", preference);
-            document.getElementById('formContainer').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
+        // Step 3: UI Completion
+        sessionStorage.setItem("shiksharthi_preference", preference);
+        document.getElementById('formContainer').classList.add('hidden');
+        document.getElementById('successMessage').classList.remove('hidden');
 
-        } catch (err) {
-            console.error("Caught Error:", err);
-            alert("Registration Failed: " + (err.message || "Unknown error occurred."));
-            
-            // Reset Button
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            btn.classList.remove('opacity-70');
-        }
+      } catch (err) {
+        console.error("Caught Error:", err);
+        alert("Registration Failed: " + (err.message || "Unknown error occurred."));
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-70');
+      }
     }
-</script>
+  </script>
 </body>
 </html>
