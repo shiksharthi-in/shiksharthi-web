@@ -52,17 +52,29 @@
         </div>
         
         <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5">
-          <div>
-            <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Full Name</label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                <i class="fas fa-user"></i>
-              </span>
-              <input type="text" id="fullName" required 
-                     class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
-                     placeholder="Enter your full name">
-            </div>
-          </div>
+  <div>
+    <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Full Name</label>
+    <div class="relative">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <i class="fas fa-user"></i>
+      </span>
+      <input type="text" id="fullName" required 
+             class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
+             placeholder="Enter your full name">
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Phone Number</label>
+    <div class="relative">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <i class="fas fa-phone"></i>
+      </span>
+      <input type="tel" id="phone" required 
+             class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-anatomyRed focus:border-transparent outline-none transition-all placeholder-gray-300"
+             placeholder="Enter your phone number">
+    </div>
+  </div>
 
           <div>
             <label class="block text-gray-700 text-sm font-bold mb-1.5 uppercase tracking-wide">Email Address</label>
@@ -127,56 +139,84 @@
 
   <script>
     async function handleRegister(event) {
-      event.preventDefault();
-      
-      const btn = document.getElementById('submitBtn');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
-      btn.disabled = true;
-      btn.classList.add('opacity-70');
+        event.preventDefault();
 
-      const fullName = document.getElementById('fullName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const preference = document.getElementById('primaryPreference').value;
+        const btn = document.getElementById('submitBtn');
+        const originalText = btn.innerHTML;
+        
+        // UI Feedback: Start Loading
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Creating Account...`;
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
 
-      try {
-  // Use the ID generated from the auth.signUp step
-  const { data, error } = await supabaseClient
-    .from('Shiksharthi_Users')
-    .insert([
-      { 
-        id: authData.user.id,        // Fixed: Explicitly passing the ID 
-        FullName: fullName,          // From your fullName variable 
-        Email: email,               // From your email variable 
-        Phone: phone,               // Re-added: From your phone variable 
-        EnrollmentStatus: "Unpaid",  // Default status 
-        PrimaryPreference: preference // From your preference variable 
-      }
-    ]);
+        // 1. Capture all form values 
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value; // Ensure you have an input with id="password"
+        const phone = document.getElementById('phone').value.trim(); // Captures the new field 
+        const preference = document.getElementById('primaryPreference').value;
 
-  if (error) {
-    if (error.code === '23505') {
-      alert("This email is already registered. Please proceed to the login page.");
-    } else {
-      alert("Registration Error: " + error.message);
+        try {
+            // 2. Step One: Sign up the user in Supabase Auth
+            // This creates the user in the 'auth.users' table and gives us the ID 
+            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                    }
+                }
+            });
+
+            if (authError) throw authError;
+
+            // 3. Step Two: Create the public profile in 'Shiksharthi_Users' 
+            // We use the ID returned from the authData above
+            const { error: dbError } = await supabaseClient
+                .from('Shiksharthi_Users')
+                .insert([
+                    { 
+                        id: authData.user.id,        // Link to the Auth user 
+                        FullName: fullName,          // Maps to FullName column 
+                        Email: email,               // Maps to Email column 
+                        Phone: phone,               // Maps to Phone column 
+                        EnrollmentStatus: "Unpaid",  // Maps to EnrollmentStatus column 
+                        PrimaryPreference: preference // Maps to PrimaryPreference column 
+                    }
+                ]);
+
+            if (dbError) {
+                // Handle specific PostgreSQL unique constraint error for email
+                if (dbError.code === '23505') {
+                    alert("This email is already registered. Please proceed to the login page.");
+                } else {
+                    alert("Database Error: " + dbError.message);
+                }
+                resetButton(btn, originalText);
+            } else {
+                // Success: Update UI 
+                sessionStorage.setItem("shiksharthi_preference", preference);
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+            }
+
+        } catch (err) {
+            console.error("Critical Registration Error:", err);
+            alert("Registration failed: " + (err.message || "Please check your connection."));
+            resetButton(btn, originalText);
+        }
     }
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-    btn.classList.remove('opacity-70');
-  } else {
-    // Success flow
-    sessionStorage.setItem("shiksharthi_preference", preference);
-    document.getElementById('formContainer').classList.add('hidden');
-    document.getElementById('successMessage').classList.remove('hidden');
-  }
-} catch (err) {
-  console.error("Critical Registration Error:", err);
-  alert("A server sync error occurred. Please check your connection.");
-  btn.innerHTML = originalText;
-  btn.disabled = false;
-  btn.classList.remove('opacity-70');
-}
+
+    // Helper function to restore button state
+    function resetButton(btn, originalText) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-70');
+    }
+
+    // Disable right-click as per your requirement 
     document.addEventListener('contextmenu', event => event.preventDefault());
-  </script>
+</script>
 </body>
 </html>
